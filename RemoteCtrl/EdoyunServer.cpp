@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "EdoyunServer.h"
 #include "EdoyunTool.h"
 
@@ -18,15 +18,15 @@ int AcceptOverlapped<op>::AcceptWorker() {
         sockaddr* plocal = NULL, *promote = NULL;
         GetAcceptExSockaddrs(*m_client, 0,
             sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16,
-            (sockaddr**)&plocal, &lLength, //±¾µØµØÖ·
-            (sockaddr**)&promote, &rLength//Ô¶³ÌµØÖ·
+            (sockaddr**)&plocal, &lLength, //æœ¬åœ°åœ°å€
+            (sockaddr**)&promote, &rLength//è¿œç¨‹åœ°å€
         );
         memcpy(m_client->GetLocalAddr(), plocal, sizeof(sockaddr_in));
         memcpy(m_client->GetRemoteAddr(),promote, sizeof(sockaddr_in));
         m_server->BindNewSocket(*m_client);
         int ret = WSARecv((SOCKET)*m_client,m_client->RecvWSABuffer(), 1, *m_client, &m_client->flags(), m_client->RecvOverlapped(), NULL);
         if (ret == SOCKET_ERROR && (WSAGetLastError() != WSA_IO_PENDING)) {
-            //TODO:±¨´í
+            //TODO:æŠ¥é”™
             TRACE("ret = %d error = %d\r\n", ret, WSAGetLastError());
         }
         if (!m_server->NewAccept())

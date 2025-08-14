@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "pch.h"
 #include <atomic>
 #include <vector>
@@ -49,7 +49,7 @@ public:
 		Stop();
 	}
 
-	//true ±íÊ¾³É¹¦ false±íÊ¾Ê§°Ü
+	//true è¡¨ç¤ºæˆåŠŸ falseè¡¨ç¤ºå¤±è´¥
 	bool Start() {
 		m_bStatus = true;
 		m_hThread = (HANDLE)_beginthread(&EdoyunThread::ThreadEntry, 0, this);
@@ -59,7 +59,7 @@ public:
 		return m_bStatus;
 	}
 
-	bool IsValid() { //·µ»Øtrue ±íÊ¾ÓĞĞ§  ·µ»Øfalse±íÊ¾Ïß³ÌÒì³£»òÕßÒÑ¾­ÖÕÖ¹
+	bool IsValid() { //è¿”å›true è¡¨ç¤ºæœ‰æ•ˆ  è¿”å›falseè¡¨ç¤ºçº¿ç¨‹å¼‚å¸¸æˆ–è€…å·²ç»ç»ˆæ­¢
 		if (m_hThread == NULL || (m_hThread == INVALID_HANDLE_VALUE)) return false;
 		return WaitForSingleObject(m_hThread, 0) == WAIT_TIMEOUT;
 	}
@@ -92,7 +92,7 @@ public:
 		m_worker.store(new ::ThreadWorker(worker));
 	}
 	
-	//true±íÊ¾¿ÕÏĞ false±íÊ¾ÒÑ¾­·ÖÅäÁË¹¤×÷
+	//trueè¡¨ç¤ºç©ºé—² falseè¡¨ç¤ºå·²ç»åˆ†é…äº†å·¥ä½œ
 	bool IsIdle() {
 		if (m_worker.load() == NULL) return true;
 		return !m_worker.load()->IsValid();
@@ -138,12 +138,12 @@ private:
 	}
 private:
 	HANDLE m_hThread;
-	bool m_bStatus; //false ±íÊ¾Ïß³Ì½«Òª¹Ø±Õ  true ±íÊ¾Ïß³ÌÕıÔÚÔËĞĞ
+	bool m_bStatus; //false è¡¨ç¤ºçº¿ç¨‹å°†è¦å…³é—­  true è¡¨ç¤ºçº¿ç¨‹æ­£åœ¨è¿è¡Œ
 	std::atomic<::ThreadWorker*> m_worker;
 };
 
 
-class EdoyunThreadPool  //Ïß³Ì³Ø
+class EdoyunThreadPool  //çº¿ç¨‹æ± 
 {
 public:
 	EdoyunThreadPool(size_t size) {
@@ -180,7 +180,7 @@ public:
 			m_threads[i]->Stop();
 		}
 	}
-	//·µ»Ø-1  ±íÊ¾·ÖÅäÊ§°Ü£¬ËùÓĞÏß³Ì¶¼ÔÚÃ¦ ´óÓÚµÈÓÚ0£¬±íÊ¾µÚn¸öÏß³Ì·ÖÅäÀ´×öÕâ¸öÊÂÇé
+	//è¿”å›-1  è¡¨ç¤ºåˆ†é…å¤±è´¥ï¼Œæ‰€æœ‰çº¿ç¨‹éƒ½åœ¨å¿™ å¤§äºç­‰äº0ï¼Œè¡¨ç¤ºç¬¬nä¸ªçº¿ç¨‹åˆ†é…æ¥åšè¿™ä¸ªäº‹æƒ…
 	int DispatchWorker(const ThreadWorker& worker) {
 		int index = -1;
 		m_lock.lock();

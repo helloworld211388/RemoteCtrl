@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Windows.h>
 #include <string>
 #include <atlimage.h>
@@ -24,7 +24,7 @@ public:
 		BYTE* pData = (BYTE*)strBuffer.c_str();
 		HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, 0);
 		if (hMem == NULL) {
-			TRACE("�ڴ治���ˣ�\r\n");
+			TRACE("内存不足了！\r\n");
 			Sleep(1);
 			return -1;
 		}

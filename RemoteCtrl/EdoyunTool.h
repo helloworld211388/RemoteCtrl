@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 class CEdoyunTool
 {
 public:
@@ -17,7 +17,7 @@ public:
     }
 
     static bool IsAdmin() {
-        HANDLE hToken = NULL; //ÉùÃ÷ÁËtokenµÄ¾ä±ú
+        HANDLE hToken = NULL; //å£°æ˜äº†tokençš„å¥æŸ„
         if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
         {
             ShowError();
@@ -38,8 +38,8 @@ public:
     }
 
     static bool RunAsAdmin()
-    {//TODO:»ñÈ¡¹ÜÀíÔ±È¨ÏŞ¡¢Ê¹ÓÃ¸ÃÈ¨ÏŞ´´½¨½ø³Ì
-        //±¾µØ²ßÂÔ×é ¿ªÆôAdministratorÕË»§  ½ûÖ¹¿ÕÃÜÂëÖ»ÄÜµÇÂ¼±¾µØ¿ØÖÆÌ¨
+    {//TODO:è·å–ç®¡ç†å‘˜æƒé™ã€ä½¿ç”¨è¯¥æƒé™åˆ›å»ºè¿›ç¨‹
+        //æœ¬åœ°ç­–ç•¥ç»„ å¼€å¯Administratorè´¦æˆ·  ç¦æ­¢ç©ºå¯†ç åªèƒ½ç™»å½•æœ¬åœ°æ§åˆ¶å°
         STARTUPINFO si = { 0 };
         PROCESS_INFORMATION pi = { 0 };
         TCHAR sPath[MAX_PATH] = _T("");
@@ -47,8 +47,8 @@ public:
         GetModuleFileName(NULL, sPath, MAX_PATH);
         BOOL ret = CreateProcessWithLogonW(_T("Administrator"), NULL, NULL, LOGON_WITH_PROFILE, NULL, sPath, CREATE_UNICODE_ENVIRONMENT, NULL, NULL, &si, &pi);
         if (!ret) {
-            ShowError(); //TODO:È¥³ıµ÷ÊÔĞÅÏ¢
-            MessageBox(NULL, sPath, _T("´´½¨½ø³ÌÊ§°Ü"), 0); //TODO:È¥³ıµ÷ÊÔĞÅÏ¢
+            ShowError(); //TODO:å»é™¤è°ƒè¯•ä¿¡æ¯
+            MessageBox(NULL, sPath, _T("åˆ›å»ºè¿›ç¨‹å¤±è´¥"), 0); //TODO:å»é™¤è°ƒè¯•ä¿¡æ¯
             return false;
         }
         WaitForSingleObject(pi.hProcess, INFINITE);
@@ -60,41 +60,41 @@ public:
     static void ShowError()
     {
         LPWSTR lpMessageBuf = NULL;
-        //strerror(errno); //±ê×¼CÓïÑÔ¿â
+        //strerror(errno); //æ ‡å‡†Cè¯­è¨€åº“
         FormatMessage(
             FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
             NULL, GetLastError(),
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
             (LPWSTR)&lpMessageBuf, 0, NULL);
         OutputDebugString(lpMessageBuf);
-        MessageBox(NULL, lpMessageBuf, _T("·¢Éú´íÎó"), 0);
+        MessageBox(NULL, lpMessageBuf, _T("å‘ç”Ÿé”™è¯¯"), 0);
         LocalFree(lpMessageBuf);
     }
     /**
-    *  ¸ÄbugµÄË¼Â·
-    * 0 ¹Û²ìÏÖÏó
-    * 1 ÏÈÈ·¶¨·¶Î§
-    * 2 ·ÖÎö´íÎóµÄ¿ÉÄÜĞÔ
-    * 3 µ÷ÊÔ»òÕß´òÈÕÖ¾£¬ÅÅ²é´íÎó
-    * 4 ´¦Àí´íÎó
-    * 5 ÑéÖ¤/³¤Ê±¼äÑéÖ¤/¶à´ÎÑéÖ¤/¶àÌõ¼şµÄÑéÖ¤
+    *  æ”¹bugçš„æ€è·¯
+    * 0 è§‚å¯Ÿç°è±¡
+    * 1 å…ˆç¡®å®šèŒƒå›´
+    * 2 åˆ†æé”™è¯¯çš„å¯èƒ½æ€§
+    * 3 è°ƒè¯•æˆ–è€…æ‰“æ—¥å¿—ï¼Œæ’æŸ¥é”™è¯¯
+    * 4 å¤„ç†é”™è¯¯
+    * 5 éªŒè¯/é•¿æ—¶é—´éªŒè¯/å¤šæ¬¡éªŒè¯/å¤šæ¡ä»¶çš„éªŒè¯
     **/
     static BOOL WriteStartupDir(const CString strPath)
-    {//Í¨¹ıĞŞ¸Ä¿ª»úÆô¶¯ÎÄ¼ş¼ĞÀ´ÊµÏÖ¿ª»úÆô¶¯
+    {//é€šè¿‡ä¿®æ”¹å¼€æœºå¯åŠ¨æ–‡ä»¶å¤¹æ¥å®ç°å¼€æœºå¯åŠ¨
         TCHAR sPath[MAX_PATH] = _T("");
         GetModuleFileName(NULL, sPath, MAX_PATH);
         return  CopyFile(sPath, strPath, FALSE);
         //fopen CFile system(copy) CopyFile OpenFile
 
     }
-    //¿ª»úÆô¶¯µÄÊ±ºò£¬³ÌĞòµÄÈ¨ÏŞÊÇ¸úËæÆô¶¯ÓÃ»§µÄ
-    //Èç¹ûÁ½ÕßÈ¨ÏŞ²»Ò»ÖÂ£¬Ôò»áµ¼ÖÂ³ÌĞòÆô¶¯Ê§°Ü
-    //¿ª»úÆô¶¯¶Ô»·¾³±äÁ¿ÓĞÓ°Ïì£¬Èç¹ûÒÀÀµdll(¶¯Ì¬¿â)£¬Ôò¿ÉÄÜÆô¶¯Ê§°Ü
-    //¡¾¸´ÖÆÕâĞ©dllµ½system32 ÏÂÃæ»òÕßsysWOW64ÏÂÃæ¡¿
-    //system32ÏÂÃæ£¬¶àÊÇ64Î»³ÌĞò  sysWOW64ÏÂÃæ¶àÊÇ32Î»³ÌĞò
-    //¡¾Ê¹ÓÃ¾²Ì¬¿â£¬¶ø·Ç¶¯Ì¬¿â¡¿
+    //å¼€æœºå¯åŠ¨çš„æ—¶å€™ï¼Œç¨‹åºçš„æƒé™æ˜¯è·Ÿéšå¯åŠ¨ç”¨æˆ·çš„
+    //å¦‚æœä¸¤è€…æƒé™ä¸ä¸€è‡´ï¼Œåˆ™ä¼šå¯¼è‡´ç¨‹åºå¯åŠ¨å¤±è´¥
+    //å¼€æœºå¯åŠ¨å¯¹ç¯å¢ƒå˜é‡æœ‰å½±å“ï¼Œå¦‚æœä¾èµ–dll(åŠ¨æ€åº“)ï¼Œåˆ™å¯èƒ½å¯åŠ¨å¤±è´¥
+    //ã€å¤åˆ¶è¿™äº›dllåˆ°system32 ä¸‹é¢æˆ–è€…sysWOW64ä¸‹é¢ã€‘
+    //system32ä¸‹é¢ï¼Œå¤šæ˜¯64ä½ç¨‹åº  sysWOW64ä¸‹é¢å¤šæ˜¯32ä½ç¨‹åº
+    //ã€ä½¿ç”¨é™æ€åº“ï¼Œè€ŒéåŠ¨æ€åº“ã€‘
     static bool WriteRegisterTable(const CString strPath)
-    {//Í¨¹ıĞŞ¸Ä×¢²á±íÀ´ÊµÏÖ¿ª»úÆô¶¯
+    {//é€šè¿‡ä¿®æ”¹æ³¨å†Œè¡¨æ¥å®ç°å¼€æœºå¯åŠ¨
         CString strSubKey = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
         //CString strPath = CString(_T("C::\\Windows\\SysWOW64\\RemoteCtrl.exe"));
         TCHAR sPath[MAX_PATH] = _T("");
@@ -102,21 +102,21 @@ public:
         BOOL ret = CopyFile(sPath, strPath, FALSE);
         //fopen CFile system(copy) CopyFile OpenFile
         if (ret == FALSE) {
-            MessageBox(NULL, _T("¸´ÖÆÎÄ¼şÊ§°Ü£¬ÊÇ·ñÈ¨ÏŞ²»×ã£¿\r\n"), _T("´íÎó"), MB_ICONERROR | MB_TOPMOST);
+            MessageBox(NULL, _T("å¤åˆ¶æ–‡ä»¶å¤±è´¥ï¼Œæ˜¯å¦æƒé™ä¸è¶³ï¼Ÿ\r\n"), _T("é”™è¯¯"), MB_ICONERROR | MB_TOPMOST);
             return false;
         }
         HKEY hKey = NULL;
         ret = RegOpenKeyEx(HKEY_LOCAL_MACHINE, strSubKey, 0, KEY_ALL_ACCESS | KEY_WOW64_64KEY, &hKey);
         if (ret != ERROR_SUCCESS) {
             RegCloseKey(hKey);
-            MessageBox(NULL, _T("ÉèÖÃ×Ô¶¯¿ª»úÆô¶¯Ê§°Ü£¡ÊÇ·ñÈ¨ÏŞ²»×ã£¿\r\n³ÌĞòÆô¶¯Ê§°Ü£¡"), _T("´íÎó"), MB_ICONERROR | MB_TOPMOST);
+            MessageBox(NULL, _T("è®¾ç½®è‡ªåŠ¨å¼€æœºå¯åŠ¨å¤±è´¥ï¼æ˜¯å¦æƒé™ä¸è¶³ï¼Ÿ\r\nç¨‹åºå¯åŠ¨å¤±è´¥ï¼"), _T("é”™è¯¯"), MB_ICONERROR | MB_TOPMOST);
             return false;
         }
 
         ret = RegSetValueEx(hKey, _T("RemoteCtrl"), 0, REG_EXPAND_SZ, (BYTE*)(LPCTSTR)strPath, strPath.GetLength() * sizeof(TCHAR));
         if (ret != ERROR_SUCCESS) {
             RegCloseKey(hKey);
-            MessageBox(NULL, _T("ÉèÖÃ×Ô¶¯¿ª»úÆô¶¯Ê§°Ü£¡ÊÇ·ñÈ¨ÏŞ²»×ã£¿\r\n³ÌĞòÆô¶¯Ê§°Ü£¡"), _T("´íÎó"), MB_ICONERROR | MB_TOPMOST);
+            MessageBox(NULL, _T("è®¾ç½®è‡ªåŠ¨å¼€æœºå¯åŠ¨å¤±è´¥ï¼æ˜¯å¦æƒé™ä¸è¶³ï¼Ÿ\r\nç¨‹åºå¯åŠ¨å¤±è´¥ï¼"), _T("é”™è¯¯"), MB_ICONERROR | MB_TOPMOST);
             return false;
         }
         RegCloseKey(hKey);
@@ -124,16 +124,16 @@ public:
     }
 
     static bool Init()
-    {//ÓÃÓÚ´øMFCÃüÁîĞĞÏîÄ¿³õÊ¼»¯£¨Í¨ÓÃ£©
+    {//ç”¨äºå¸¦MFCå‘½ä»¤è¡Œé¡¹ç›®åˆå§‹åŒ–ï¼ˆé€šç”¨ï¼‰
         HMODULE hModule = ::GetModuleHandle(nullptr);
         if (hModule == nullptr) {
-            wprintf(L"´íÎó:GetModuleHandle Ê§°Ü\n");
+            wprintf(L"é”™è¯¯:GetModuleHandle å¤±è´¥\n");
             return false;
         }
         if (!AfxWinInit(hModule, nullptr, ::GetCommandLine(), 0))
         {
-            // TODO: ÔÚ´Ë´¦ÎªÓ¦ÓÃ³ÌĞòµÄĞĞÎª±àĞ´´úÂë¡£
-            wprintf(L"´íÎó: MFC ³õÊ¼»¯Ê§°Ü\n");
+            // TODO: åœ¨æ­¤å¤„ä¸ºåº”ç”¨ç¨‹åºçš„è¡Œä¸ºç¼–å†™ä»£ç ã€‚
+            wprintf(L"é”™è¯¯: MFC åˆå§‹åŒ–å¤±è´¥\n");
             return false;
         }
         return true;

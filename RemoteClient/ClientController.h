@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ClientSocket.h"
 #include "CWatchDialog.h"
 #include "RemoteClientDlg.h"
@@ -8,26 +8,26 @@
 #include "EdoyunTool.h"
 
 
-//#define WM_SEND_DATA (WM_USER+2) //��������
-#define WM_SHOW_STATUS (WM_USER+3) //չʾ״̬
-#define WM_SHOW_WATCH (WM_USER+4) //Զ�̼��
-#define WM_SEND_MESSAGE (WM_USER+0x1000) //�Զ�����Ϣ����
+//#define WM_SEND_DATA (WM_USER+2) //发送数据
+#define WM_SHOW_STATUS (WM_USER+3) //展示状态
+#define WM_SHOW_WATCH (WM_USER+4) //远程监控
+#define WM_SEND_MESSAGE (WM_USER+0x1000) //自定义消息处理
 
 
-//ҵ���߼������̣� ����ʱ���ܷ����ı�ģ�����������
-//ҵ���߼������̣� ����ʱ���ܷ����ı�ģ�����������
-//ҵ���߼������̣� ����ʱ���ܷ����ı�ģ�����������
+//业务逻辑和流程， 是随时可能发生改变的！！！！！！
+//业务逻辑和流程， 是随时可能发生改变的！！！！！！
+//业务逻辑和流程， 是随时可能发生改变的！！！！！！
 
 class CClientController
 {
 public:
-	//��ȡȫ��Ψһ����
+	//获取全局唯一对象
 	static CClientController* getInstance();
-	//��ʼ������
+	//初始化操作
 	int InitController();
-	//����
+	//启动
 	int Invoke(CWnd*& pMainWnd);
-	//��������������ĵ�ַ
+	//更新网络服务器的地址
 	void UpdateAddress(int nIP, int nPort) {
 		CClientSocket::getInstance()->UpdateAddress(nIP, nPort);
 	}
@@ -38,19 +38,19 @@ public:
 		CClientSocket::getInstance()->CloseSocket();
 	}
 	
-	//1 �鿴���̷���
-	//2 �鿴ָ��Ŀ¼�µ��ļ�
-	//3 ���ļ�
-	//4 �����ļ�
-	//5 ������
-	//6 ������Ļ����==��������Ļ��ͼ
-	//7 ����
-	//8 ����
-	//9 ɾ���ļ�
-	//1981 ��������
-	//����ֵ����״̬��true�ǳɹ���false��ʧ��
+	//1 查看磁盘分区
+	//2 查看指定目录下的文件
+	//3 打开文件
+	//4 下载文件
+	//5 鼠标操作
+	//6 发送屏幕内容==》发送屏幕截图
+	//7 锁机
+	//8 解锁
+	//9 删除文件
+	//1981 测试连接
+	//返回值：是状态，true是成功，false是失败
 	bool SendCommandPacket(
-		HWND hWnd, //���ݰ��յ�����ҪӦ��Ĵ���
+		HWND hWnd, //数据包收到后，需要应答的窗口
 		int nCmd,
 		bool bAutoClose = true,
 		BYTE* pData = NULL,
@@ -118,15 +118,15 @@ private:
 	}MSGINFO;
 	typedef LRESULT(CClientController::* MSGFUNC)(UINT nMsg, WPARAM wParam, LPARAM lParam);
 	static std::map<UINT, MSGFUNC> m_mapFunc;
-	CWatchDialog m_watchDlg; //��Ϣ�����ڶԻ���ر�֮�󣬿��ܵ����ڴ�й©
+	CWatchDialog m_watchDlg; //消息包，在对话框关闭之后，可能导致内存泄漏
 	CRemoteClientDlg m_remoteDlg;
 	CStatusDlg m_statusDlg;
 	HANDLE m_hThread;
 	HANDLE m_hThreadWatch;
-	bool m_isClosed; //�����Ƿ�ر�
-	//�����ļ���Զ��·��
+	bool m_isClosed; //监视是否关闭
+	//下载文件的远程路径
 	CString m_strRemote; 
-	//�����ļ��ı��ر���·��
+	//下载文件的本地保存路径
 	CString m_strLocal;
 	unsigned  m_nThreadID;
 	static CClientController* m_instance;

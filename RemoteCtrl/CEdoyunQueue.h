@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "pch.h"
 #include <atomic>
 #include <list>
@@ -6,7 +6,7 @@
 
 template<class T>
 class CEdoyunQueue
-{//Ïß³Ì°²È«µÄ¶ÓÁĞ£¨ÀûÓÃIOCPÊµÏÖ£©
+{//çº¿ç¨‹å®‰å…¨çš„é˜Ÿåˆ—ï¼ˆåˆ©ç”¨IOCPå®ç°ï¼‰
 public:
 	enum {
 		EQNone,
@@ -16,9 +16,9 @@ public:
 		EQClear
 	};
 	typedef struct IocpParam {
-		size_t nOperator;//²Ù×÷
-		T Data;//Êı¾İ
-		HANDLE hEvent;//pop²Ù×÷ĞèÒªµÄ
+		size_t nOperator;//æ“ä½œ
+		T Data;//æ•°æ®
+		HANDLE hEvent;//popæ“ä½œéœ€è¦çš„
 		IocpParam(int op, const T& data, HANDLE hEve = NULL) {
 			nOperator = op;
 			Data = data;
@@ -27,7 +27,7 @@ public:
 		IocpParam() {
 			nOperator = EQNone;
 		}
-	}PPARAM;//Post Parameter ÓÃÓÚÍ¶µİĞÅÏ¢µÄ½á¹¹Ìå
+	}PPARAM;//Post Parameter ç”¨äºæŠ•é€’ä¿¡æ¯çš„ç»“æ„ä½“
 public:
 	CEdoyunQueue() {
 		m_lock = false;
@@ -182,7 +182,7 @@ protected:
 	std::list<T> m_lstData;
 	HANDLE m_hCompeletionPort;
 	HANDLE m_hThread;
-	std::atomic<bool> m_lock;//¶ÓÁĞÕıÔÚÎö¹¹
+	std::atomic<bool> m_lock;//é˜Ÿåˆ—æ­£åœ¨ææ„
 };
 
 typedef int (ThreadFuncBase::* EDYCALLBACK)();

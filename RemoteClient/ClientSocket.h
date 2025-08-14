@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "pch.h"
 #include "framework.h"
 #include <string>
@@ -6,11 +6,11 @@
 #include <map>
 #include <list>
 #include <mutex>
-#define WM_SEND_PACK (WM_USER+1) //·¢ËÍ°üÊı¾İ
-#define WM_SEND_PACK_ACK (WM_USER+2) //·¢ËÍ°üÊı¾İÓ¦´ğ
+#define WM_SEND_PACK (WM_USER+1) //å‘é€åŒ…æ•°æ®
+#define WM_SEND_PACK_ACK (WM_USER+2) //å‘é€åŒ…æ•°æ®åº”ç­”
 #pragma pack(push)
 #pragma pack(1)
-//Éè¼ÆÒ»¸ö°ü
+//è®¾è®¡ä¸€ä¸ªåŒ…
 class CPacket
 {
 public:
@@ -44,16 +44,16 @@ public:
 		for (; i < nSize; i++) {
 			if (*(WORD*)(pData + i) == 0xFEFF) {
 				sHead = *(WORD*)(pData + i);
-				i += 2; //why? ·ÀÖ¹Ò»ÖÖÌØÊâÇé¿ö
+				i += 2; //why? é˜²æ­¢ä¸€ç§ç‰¹æ®Šæƒ…å†µ
 				break;
 			}
 		}
-		if (i + 4 + 2 + 2 > nSize) {//°üÊı¾İ¿ÉÄÜ²»È«£¬»òÕß°üÍ·Î´ÄÜÈ«²¿½ÓÊÕµ½
+		if (i + 4 + 2 + 2 > nSize) {//åŒ…æ•°æ®å¯èƒ½ä¸å…¨ï¼Œæˆ–è€…åŒ…å¤´æœªèƒ½å…¨éƒ¨æ¥æ”¶åˆ°
 			nSize = 0;
 			return;
 		}
 		nLength = *(DWORD*)(pData + i); i += 4;
-		if (nLength + i > nSize) { //°üÎ´ÍêÈ«½ÓÊÕµ½£¬¾Í·µ»Ø£¬½âÎöÊ§°Ü
+		if (nLength + i > nSize) { //åŒ…æœªå®Œå…¨æ¥æ”¶åˆ°ï¼Œå°±è¿”å›ï¼Œè§£æå¤±è´¥
 			nSize = 0;
 			return;
 		}
@@ -87,7 +87,7 @@ public:
 		}
 		return *this;
 	}
-	int Size() { //°üÊı¾İµÄ´óĞ¡
+	int Size() { //åŒ…æ•°æ®çš„å¤§å°
 		return nLength + 6;
 	}
 	const char* Data(std::string& strOut) const{
@@ -101,11 +101,11 @@ public:
 		return strOut.c_str();
 	}
 public:
-	WORD sHead; //¹Ì¶¨Î» 0xFEFF
-	DWORD nLength; //°ü³¤¶È£¨´Ó¿ØÖÆÃüÁî¿ªÊ¼£¬µ½ºÍĞ£Ñé½áÊø£©
-	WORD sCmd;    //¿ØÖÆÃüÁî
-	std::string strData; //°üÊı¾İ
-	WORD sSum; //ºÍĞ£Ñé
+	WORD sHead; //å›ºå®šä½ 0xFEFF
+	DWORD nLength; //åŒ…é•¿åº¦ï¼ˆä»æ§åˆ¶å‘½ä»¤å¼€å§‹ï¼Œåˆ°å’Œæ ¡éªŒç»“æŸï¼‰
+	WORD sCmd;    //æ§åˆ¶å‘½ä»¤
+	std::string strData; //åŒ…æ•°æ®
+	WORD sSum; //å’Œæ ¡éªŒ
 };
 
 #pragma pack(pop)
@@ -113,13 +113,13 @@ public:
 typedef struct MouseEvent {
 	MouseEvent() {
 		nAction = 0;
-		nButton = -1; //Èç¹ûÖÃ³É0£¬Ä¬ÈÏ¾ÍÊÇ×ó¼ü  ÖÃ³É-1£¬Ò»µ©³öÏÖÎÊÌâ£¬ËµÃ÷²ÎÊıÉèÖÃÓĞÎÊÌâ
+		nButton = -1; //å¦‚æœç½®æˆ0ï¼Œé»˜è®¤å°±æ˜¯å·¦é”®  ç½®æˆ-1ï¼Œä¸€æ—¦å‡ºç°é—®é¢˜ï¼Œè¯´æ˜å‚æ•°è®¾ç½®æœ‰é—®é¢˜
 		ptXY.x = 0;
 		ptXY.y = 0;
 	}
-	WORD nAction; //µã»÷¡¢ÒÆ¶¯¡¢Ë«»÷
-	WORD nButton; //×ó¼ü¡¢ÓÒ¼ü¡¢ÖĞ¼ü
-	POINT ptXY; //×ø±ê
+	WORD nAction; //ç‚¹å‡»ã€ç§»åŠ¨ã€åŒå‡»
+	WORD nButton; //å·¦é”®ã€å³é”®ã€ä¸­é”®
+	POINT ptXY; //åæ ‡
 }MOUSEEV, * PMOUSEEV;
 
 typedef struct file_info {
@@ -129,15 +129,15 @@ typedef struct file_info {
 		HasNext = TRUE;
 		memset(szFileName, 0, sizeof(szFileName));
 	}
-	BOOL IsInvalid; // ÊÇ·ñÓĞĞ§
-	BOOL IsDirectory; //ÊÇ·ñÎªÄ¿Â¼ 0 ·ñ 1 ÊÇ
-	BOOL HasNext; // ÊÇ·ñ»¹ÓĞºóĞø 0Ã»ÓĞ 1 ÓĞ
-	char szFileName[256]; // ÎÄ¼şÃû
+	BOOL IsInvalid; // æ˜¯å¦æœ‰æ•ˆ
+	BOOL IsDirectory; //æ˜¯å¦ä¸ºç›®å½• 0 å¦ 1 æ˜¯
+	BOOL HasNext; // æ˜¯å¦è¿˜æœ‰åç»­ 0æ²¡æœ‰ 1 æœ‰
+	char szFileName[256]; // æ–‡ä»¶å
 
 }FILEINFO, * PFILEINFO;
 
 enum {
-	CSM_AUTOCLOSE=1, //CSM =Client Socket Mode  ×Ô¶¯¹Ø±ÕÄ£Ê½
+	CSM_AUTOCLOSE=1, //CSM =Client Socket Mode  è‡ªåŠ¨å…³é—­æ¨¡å¼
 };
 typedef struct PacketData{
 	std::string strData;
@@ -169,8 +169,8 @@ void Dump(BYTE* pData, size_t nSize);
 class CClientSocket
 {
 public:
-	static CClientSocket* getInstance() {//¾²Ì¬º¯Êı  »¹ÊÇpublic  ÔÚÀàÍâÃæ¿ÉÒÔµ÷ÓÃ£¨Óï·¨ÉÏÃæµÄ¹æ¶¨£©
-		if (m_instance == NULL) {  //¾²Ì¬º¯ÊıÃ»ÓĞthis Ö¸Õë£¬ËùÒÔÎŞ·¨Ö±½Ó·ÃÎÊ³ÉÔ±±äÁ¿
+	static CClientSocket* getInstance() {//é™æ€å‡½æ•°  è¿˜æ˜¯public  åœ¨ç±»å¤–é¢å¯ä»¥è°ƒç”¨ï¼ˆè¯­æ³•ä¸Šé¢çš„è§„å®šï¼‰
+		if (m_instance == NULL) {  //é™æ€å‡½æ•°æ²¡æœ‰this æŒ‡é’ˆï¼Œæ‰€ä»¥æ— æ³•ç›´æ¥è®¿é—®æˆå‘˜å˜é‡
 			m_instance = new CClientSocket();
 			TRACE("CClientSocket size is %d\r\n", sizeof(*m_instance));
 		}
@@ -180,11 +180,11 @@ public:
 	
 
 
-#define BUFFER_SIZE 4096000 //°Ñ409600 ¸ÄÎª 4096000  ½á¹û³É¹¦À²
+#define BUFFER_SIZE 4096000 //æŠŠ409600 æ”¹ä¸º 4096000  ç»“æœæˆåŠŸå•¦
 	int DealCommand() {
 		if (m_sock == -1) return -1;
-		char* buffer = m_buffer.data();//TODO:¶àÏß³Ì·¢ËÍÃüÁîÊ±¿ÉÄÜ»á³öÏÖ³åÍ»
-		static size_t index = 0; //Ö®Ç°Îª·Ç¾²Ì¬
+		char* buffer = m_buffer.data();//TODO:å¤šçº¿ç¨‹å‘é€å‘½ä»¤æ—¶å¯èƒ½ä¼šå‡ºç°å†²çª
+		static size_t index = 0; //ä¹‹å‰ä¸ºéé™æ€
 		while (true) {
 			size_t len = recv(m_sock, buffer + index, BUFFER_SIZE - index, 0);
 			if ((len <= 0) && (index <= 0)) {
@@ -197,7 +197,7 @@ public:
 			TRACE("rece len = %d(0x%08X)  index = %d(0x%08X)\r\n", len, len, index, index);
 			m_packet = CPacket((BYTE*)buffer, len);
 			TRACE("command %d\r\n", m_packet.sCmd);
-			if (len > 0) { //ÎªÊ²Ã´»áÌø¹ı°¡?
+			if (len > 0) { //ä¸ºä»€ä¹ˆä¼šè·³è¿‡å•Š?
 				memmove(buffer, buffer + len, index - len);
 				index -= len;
 				return m_packet.sCmd;
@@ -236,7 +236,7 @@ public:
 		}
 	}
 private:
-	HANDLE m_eventInvoke;//Æô¶¯ÊÂ¼ş
+	HANDLE m_eventInvoke;//å¯åŠ¨äº‹ä»¶
 	UINT m_nThreadID;
 	typedef void(CClientSocket::* MSGFUNC)(UINT nMsg, WPARAM wParam, LPARAM lParam);
 	std::map<UINT, MSGFUNC> m_mapFunc;
@@ -246,8 +246,8 @@ private:
 	std::list<CPacket> m_lstSend;
 	std::map<HANDLE, std::list<CPacket>&> m_mapAck;
 	std::map<HANDLE, bool> m_mapAutoClosed;
-	int m_nIP;//µØÖ·
-	int m_nPort;//¶Ë¿Ú
+	int m_nIP;//åœ°å€
+	int m_nPort;//ç«¯å£
 	std::vector<char> m_buffer;
 	SOCKET m_sock;
 	CPacket m_packet;
@@ -274,7 +274,7 @@ private:
 		return send(m_sock, pData, nSize, 0) > 0;
 	}
 	bool Send(const CPacket& pack);
-	void SendPack(UINT nMsg, WPARAM wParam/*»º³åÇøµÄÖµ*/, LPARAM lParam/*»º³åÇøµÄ³¤¶È*/);
+	void SendPack(UINT nMsg, WPARAM wParam/*ç¼“å†²åŒºçš„å€¼*/, LPARAM lParam/*ç¼“å†²åŒºçš„é•¿åº¦*/);
 	static void releaseInstance() {
 		TRACE("CClientSocket has been called!\r\n");
 		if (m_instance != NULL) {

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "pch.h"
 #include "framework.h"
 #include <list>
@@ -10,22 +10,22 @@ typedef void(*SOCKET_CALLBACK)(void* arg,int status, std::list <CPacket>&,CPacke
 class CServerSocket
 {
 public:
-	static CServerSocket* getInstance() {//¾²Ì¬º¯Êı  »¹ÊÇpublic  ÔÚÀàÍâÃæ¿ÉÒÔµ÷ÓÃ£¨Óï·¨ÉÏÃæµÄ¹æ¶¨£©
-		if (m_instance == NULL) {  //¾²Ì¬º¯ÊıÃ»ÓĞthis Ö¸Õë£¬ËùÒÔÎŞ·¨Ö±½Ó·ÃÎÊ³ÉÔ±±äÁ¿
+	static CServerSocket* getInstance() {//é™æ€å‡½æ•°  è¿˜æ˜¯public  åœ¨ç±»å¤–é¢å¯ä»¥è°ƒç”¨ï¼ˆè¯­æ³•ä¸Šé¢çš„è§„å®šï¼‰
+		if (m_instance == NULL) {  //é™æ€å‡½æ•°æ²¡æœ‰this æŒ‡é’ˆï¼Œæ‰€ä»¥æ— æ³•ç›´æ¥è®¿é—®æˆå‘˜å˜é‡
 			m_instance = new CServerSocket();
 		}
 		return m_instance;
 	}
-	bool InitSocket(short port) { //¼ì²é³õÊ¼»¯ÓĞÃ»ÓĞ³É¹¦
+	bool InitSocket(short port) { //æ£€æŸ¥åˆå§‹åŒ–æœ‰æ²¡æœ‰æˆåŠŸ
 
 		if (m_sock == -1) return false;
-		//TODO:Ğ£Ñé
+		//TODO:æ ¡éªŒ
 		sockaddr_in serv_adr;
 		memset(&serv_adr, 0, sizeof(serv_adr));
 		serv_adr.sin_family = AF_INET;
-		serv_adr.sin_addr.s_addr = INADDR_ANY;//¼àÌıËùÓĞIP
+		serv_adr.sin_addr.s_addr = INADDR_ANY;//ç›‘å¬æ‰€æœ‰IP
 		serv_adr.sin_port = htons(port);
-		//°ó¶¨
+		//ç»‘å®š
 		if (bind(m_sock, (sockaddr*)&serv_adr, sizeof(serv_adr)) == -1) {
 			return false;
 		}
@@ -38,9 +38,9 @@ public:
 	}
 
 	int Run(SOCKET_CALLBACK callback, void* arg, short port = 9527) {
-		//1 ½ø¶ÈµÄ¿É¿ØĞÔ  2  ¶Ô½ÓµÄ·½±ãĞÔ  3 ¿ÉĞĞĞÔÆÀ¹À£¬ÌáÔç±©Â¶·çÏÕ
-		// TODO: socket¡¢bind¡¢listen¡¢accept¡¢read¡¢write¡¢close
-		//Ì×½Ó×Ö³õÊ¼»¯
+		//1 è¿›åº¦çš„å¯æ§æ€§  2  å¯¹æ¥çš„æ–¹ä¾¿æ€§  3 å¯è¡Œæ€§è¯„ä¼°ï¼Œææ—©æš´éœ²é£é™©
+		// TODO: socketã€bindã€listenã€acceptã€readã€writeã€close
+		//å¥—æ¥å­—åˆå§‹åŒ–
 		bool ret = InitSocket(port);
 		if (ret == false) return -1;
 		std::list <CPacket> lstPackets;
@@ -67,7 +67,7 @@ public:
 		return 0;
 	}
 protected:
-	bool AcceptClient() { // ½ÓÊÕ¿Í»§¶Ë
+	bool AcceptClient() { // æ¥æ”¶å®¢æˆ·ç«¯
 		TRACE("enter AcceptClient\r\n");
 		sockaddr_in client_adr;
 		int cli_sz = sizeof(client_adr);
@@ -83,7 +83,7 @@ protected:
 		//char buffer[1024] = "";
 		char* buffer = new char[BUFFER_SIZE];
 		if (buffer == NULL) {
-			TRACE("ÄÚ´æ²»×ã!\r\n");
+			TRACE("å†…å­˜ä¸è¶³!\r\n");
 			return -2;
 		}
 		memset(buffer, 0, BUFFER_SIZE);
@@ -109,7 +109,7 @@ protected:
 		return -1;
 	}
 
-	bool Send(const char* pData, int nSize) { //²»ÓÃ·â×°  Ö±½Ó·¢×ß  £¨±¾ÏîÄ¿¿ÉÄÜÓÃ²»µ½£¬Ç¨ÒÆÒÔºó¿ÉÄÜ»áÓÃµ½£©
+	bool Send(const char* pData, int nSize) { //ä¸ç”¨å°è£…  ç›´æ¥å‘èµ°  ï¼ˆæœ¬é¡¹ç›®å¯èƒ½ç”¨ä¸åˆ°ï¼Œè¿ç§»ä»¥åå¯èƒ½ä¼šç”¨åˆ°ï¼‰
 		if (m_client == -1) return false;
 		return send(m_client, pData, nSize, 0) > 0;
 	}
@@ -140,7 +140,7 @@ private:
 	CServerSocket() {
 		m_client = INVALID_SOCKET; // -1
 		if (InitSockEnv() == FALSE) {
-			MessageBox(NULL, _T("ÎŞ·¨³õÊ¼»¯Ì×½Ó×Ö»·¾³,Çë¼ì²éÍøÂçÉèÖÃ£¡"), _T("³õÊ¼»¯´íÎó£¡"), MB_OK | MB_ICONERROR);//MB_OK | MB_ICONERROR ½áºÏÆğÀ´±íÊ¾ÏûÏ¢¿ò»áÏÔÊ¾Ò»¸ö°üº¬¡°È·¶¨¡±°´Å¥ºÍÒ»¸ö´íÎóÍ¼±êµÄÏûÏ¢¿ò
+			MessageBox(NULL, _T("æ— æ³•åˆå§‹åŒ–å¥—æ¥å­—ç¯å¢ƒ,è¯·æ£€æŸ¥ç½‘ç»œè®¾ç½®ï¼"), _T("åˆå§‹åŒ–é”™è¯¯ï¼"), MB_OK | MB_ICONERROR);//MB_OK | MB_ICONERROR ç»“åˆèµ·æ¥è¡¨ç¤ºæ¶ˆæ¯æ¡†ä¼šæ˜¾ç¤ºä¸€ä¸ªåŒ…å«â€œç¡®å®šâ€æŒ‰é’®å’Œä¸€ä¸ªé”™è¯¯å›¾æ ‡çš„æ¶ˆæ¯æ¡†
 			exit(0);
 		}
 		m_sock = socket(PF_INET, SOCK_STREAM, 0);
@@ -158,7 +158,7 @@ private:
 		return TRUE;
 	}
 	static void releaseInstance() {
-		if (m_instance != NULL) { //·ÀÓùĞÔ±à³Ì
+		if (m_instance != NULL) { //é˜²å¾¡æ€§ç¼–ç¨‹
 			CServerSocket* tmp = m_instance;
 			m_instance = NULL;
 			delete tmp;

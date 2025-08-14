@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <MSWSock.h>
 #include "EdoyunThread.h"
 #include "CEdoyunQueue.h"
@@ -22,11 +22,11 @@ typedef std::shared_ptr<EdoyunClient> PCLIENT;
 class EdoyunOverlapped {
 public:
     OVERLAPPED m_overlapped;
-    DWORD m_operator; //²Ù×÷  ²Î¼ÓEdoyunOperator
-    std::vector<char> m_buffer; //»º³åÇø
-    ThreadWorker m_worker;//´¦Àíº¯Êı
-    EdoyunServer* m_server; //·şÎñÆ÷¶ÔÏó
-    EdoyunClient* m_client; //¶ÔÓ¦µÄ¿Í»§¶Ë
+    DWORD m_operator; //æ“ä½œ  å‚åŠ EdoyunOperator
+    std::vector<char> m_buffer; //ç¼“å†²åŒº
+    ThreadWorker m_worker;//å¤„ç†å‡½æ•°
+    EdoyunServer* m_server; //æœåŠ¡å™¨å¯¹è±¡
+    EdoyunClient* m_client; //å¯¹åº”çš„å®¢æˆ·ç«¯
     WSABUF m_wsabuffer;
     virtual ~EdoyunOverlapped() {
         m_buffer.clear();
@@ -85,7 +85,7 @@ public:
     std::list<CPacket> recvPackets;
     std::list<CPacket> sendPackets;
     std::vector<char> m_buffer;
-    size_t m_used; //ÒÑ¾­Ê¹ÓÃµÄ»º³åÇø´óĞ¡
+    size_t m_used; //å·²ç»ä½¿ç”¨çš„ç¼“å†²åŒºå¤§å°
     sockaddr_in m_laddr;
     sockaddr_in m_raddr;
     bool m_isbusy;
@@ -112,7 +112,7 @@ public:
                
                 if (index == 0) {
                     WSASend((SOCKET)*m_client, m_client->SendWSABuffer(), 1, *m_client, m_client->flags(), m_client->SendOverlapped(), NULL);
-                    TRACE("ÃüÁî: %d\r\n", pack.sCmd);
+                    TRACE("å‘½ä»¤: %d\r\n", pack.sCmd);
                    
                    
                 }
@@ -134,7 +134,7 @@ public:
         //TODO:
 
         /*
-         1.Send¿ÉÄÜ²»»áÁ¢¼´Íê³É
+         1.Sendå¯èƒ½ä¸ä¼šç«‹å³å®Œæˆ
         */
         while (m_client->sendPackets.size()>0)
         {

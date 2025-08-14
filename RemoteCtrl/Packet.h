@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include "pch.h"
 #include "framework.h"
 
 #pragma pack(push)
 #pragma pack(1)
-//Éè¼ÆÒ»¸ö°ü
+//è®¾è®¡ä¸€ä¸ªåŒ…
 class CPacket
 {
 public:
@@ -38,16 +38,16 @@ public:
 		for (; i < nSize; i++) {
 			if (*(WORD*)(pData + i) == 0xFEFF) {
 				sHead = *(WORD*)(pData + i);
-				i += 2; //why? ·ÀÖ¹Ò»ÖÖÌØÊâÇé¿ö
+				i += 2; //why? é˜²æ­¢ä¸€ç§ç‰¹æ®Šæƒ…å†µ
 				break;
 			}
 		}
-		if (i + 4 + 2 + 2 > nSize) {//°üÊı¾İ¿ÉÄÜ²»È«£¬»òÕß°üÍ·Î´ÄÜÈ«²¿½ÓÊÕµ½
+		if (i + 4 + 2 + 2 > nSize) {//åŒ…æ•°æ®å¯èƒ½ä¸å…¨ï¼Œæˆ–è€…åŒ…å¤´æœªèƒ½å…¨éƒ¨æ¥æ”¶åˆ°
 			nSize = 0;
 			return;
 		}
 		nLength = *(DWORD*)(pData + i); i += 4;
-		if (nLength + i > nSize) { //°üÎ´ÍêÈ«½ÓÊÕµ½£¬¾Í·µ»Ø£¬½âÎöÊ§°Ü
+		if (nLength + i > nSize) { //åŒ…æœªå®Œå…¨æ¥æ”¶åˆ°ï¼Œå°±è¿”å›ï¼Œè§£æå¤±è´¥
 			nSize = 0;
 			return;
 		}
@@ -80,7 +80,7 @@ public:
 		}
 		return *this;
 	}
-	int Size() { //°üÊı¾İµÄ´óĞ¡
+	int Size() { //åŒ…æ•°æ®çš„å¤§å°
 		return nLength + 6;
 	}
 	const char* Data() {
@@ -94,12 +94,12 @@ public:
 		return strOut.c_str();
 	}
 public:
-	WORD sHead; //¹Ì¶¨Î» 0xFEFF
-	DWORD nLength; //°ü³¤¶È£¨´Ó¿ØÖÆÃüÁî¿ªÊ¼£¬µ½ºÍĞ£Ñé½áÊø£©
-	WORD sCmd;    //¿ØÖÆÃüÁî
-	std::string strData; //°üÊı¾İ
-	WORD sSum; //ºÍĞ£Ñé
-	std::string strOut; //Õû¸ö°üµÄÊı¾İ
+	WORD sHead; //å›ºå®šä½ 0xFEFF
+	DWORD nLength; //åŒ…é•¿åº¦ï¼ˆä»æ§åˆ¶å‘½ä»¤å¼€å§‹ï¼Œåˆ°å’Œæ ¡éªŒç»“æŸï¼‰
+	WORD sCmd;    //æ§åˆ¶å‘½ä»¤
+	std::string strData; //åŒ…æ•°æ®
+	WORD sSum; //å’Œæ ¡éªŒ
+	std::string strOut; //æ•´ä¸ªåŒ…çš„æ•°æ®
 };
 
 #pragma pack(pop)
@@ -107,13 +107,13 @@ public:
 typedef struct MouseEvent {
 	MouseEvent() {
 		nAction = 0;
-		nButton = -1; //Èç¹ûÖÃ³É0£¬Ä¬ÈÏ¾ÍÊÇ×ó¼ü  ÖÃ³É-1£¬Ò»µ©³öÏÖÎÊÌâ£¬ËµÃ÷²ÎÊıÉèÖÃÓĞÎÊÌâ
+		nButton = -1; //å¦‚æœç½®æˆ0ï¼Œé»˜è®¤å°±æ˜¯å·¦é”®  ç½®æˆ-1ï¼Œä¸€æ—¦å‡ºç°é—®é¢˜ï¼Œè¯´æ˜å‚æ•°è®¾ç½®æœ‰é—®é¢˜
 		ptXY.x = 0;
 		ptXY.y = 0;
 	}
-	WORD nAction; //µã»÷¡¢ÒÆ¶¯¡¢Ë«»÷
-	WORD nButton; //×ó¼ü¡¢ÓÒ¼ü¡¢ÖĞ¼ü
-	POINT ptXY; //×ø±ê
+	WORD nAction; //ç‚¹å‡»ã€ç§»åŠ¨ã€åŒå‡»
+	WORD nButton; //å·¦é”®ã€å³é”®ã€ä¸­é”®
+	POINT ptXY; //åæ ‡
 }MOUSEEV, * PMOUSEEV;
 
 typedef struct file_info {
@@ -123,9 +123,9 @@ typedef struct file_info {
 		HasNext = TRUE;
 		memset(szFileName, 0, sizeof(szFileName));
 	}
-	BOOL IsInvalid; // ÊÇ·ñÓĞĞ§
-	BOOL IsDirectory; //ÊÇ·ñÎªÄ¿Â¼ 0 ·ñ 1 ÊÇ
-	BOOL HasNext; // ÊÇ·ñ»¹ÓĞºóĞø 0Ã»ÓĞ 1 ÓĞ
-	char szFileName[256]; // ÎÄ¼şÃû
+	BOOL IsInvalid; // æ˜¯å¦æœ‰æ•ˆ
+	BOOL IsDirectory; //æ˜¯å¦ä¸ºç›®å½• 0 å¦ 1 æ˜¯
+	BOOL HasNext; // æ˜¯å¦è¿˜æœ‰åç»­ 0æ²¡æœ‰ 1 æœ‰
+	char szFileName[256]; // æ–‡ä»¶å
 
 }FILEINFO, * PFILEINFO;

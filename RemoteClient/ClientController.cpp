@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ClientSocket.h"
 #include "ClientController.h"
 
@@ -67,7 +67,7 @@ void CClientController::DownloadEnd()
 {
 	m_statusDlg.ShowWindow(SW_HIDE);
 	m_remoteDlg.EndWaitCursor();
-	m_remoteDlg.MessageBox(_T("ÏÂÔØÍê³É£¡£¡"), _T("Íê³É"));
+	m_remoteDlg.MessageBox(_T("ä¸‹è½½å®Œæˆï¼ï¼"), _T("å®Œæˆ"));
 }
 
 int CClientController::DownFile(CString strPath)
@@ -78,7 +78,7 @@ int CClientController::DownFile(CString strPath)
 		m_strLocal = dlg.GetPathName();
 		FILE* pFile = fopen(m_strLocal, "wb+");
 		if (pFile == NULL) {
-			AfxMessageBox(_T("±¾µØÃ»ÓĞÈ¨ÏŞ±£´æ¸ÃÎÄ¼ş£¬»òÕßÎÄ¼şÎŞ·¨´´½¨£¡£¡£¡"));
+			AfxMessageBox(_T("æœ¬åœ°æ²¡æœ‰æƒé™ä¿å­˜è¯¥æ–‡ä»¶ï¼Œæˆ–è€…æ–‡ä»¶æ— æ³•åˆ›å»ºï¼ï¼ï¼"));
 			return -1;
 		}
 		SendCommandPacket(m_remoteDlg, 4, false, (BYTE*)(LPCSTR)m_strRemote, m_strRemote.GetLength(), (WPARAM)pFile);
@@ -87,7 +87,7 @@ int CClientController::DownFile(CString strPath)
 			return -1;
 		}*/
 		m_remoteDlg.BeginWaitCursor();
-		m_statusDlg.m_info.SetWindowText(_T("ÃüÁîÕıÔÚÖ´ĞĞÖĞ£¡"));
+		m_statusDlg.m_info.SetWindowText(_T("å‘½ä»¤æ­£åœ¨æ‰§è¡Œä¸­ï¼"));
 		m_statusDlg.ShowWindow(SW_SHOW);
 		m_statusDlg.CenterWindow(&m_remoteDlg);
 		m_statusDlg.SetActiveWindow();
@@ -115,13 +115,13 @@ void CClientController::threadWatchScreen()
 			}
 			nTick = GetTickCount64();
 			int ret = SendCommandPacket(m_watchDlg.GetSafeHwnd(), 6, true, NULL, 0);
-			//TODO:Ìí¼ÓÏûÏ¢ÏìÓ¦º¯Êı WM_SEND_PACK_ACK
-			//TODO:¿ØÖÆ·¢ËÍÆµÂÊ
+			//TODO:æ·»åŠ æ¶ˆæ¯å“åº”å‡½æ•° WM_SEND_PACK_ACK
+			//TODO:æ§åˆ¶å‘é€é¢‘ç‡
 			if (ret == 1) {
-				//TRACE("³É¹¦·¢ËÍÇëÇóÍ¼Æ¬ÃüÁî\r\n");
+				//TRACE("æˆåŠŸå‘é€è¯·æ±‚å›¾ç‰‡å‘½ä»¤\r\n");
 			}
 			else {
-				TRACE("»ñÈ¡Í¼Æ¬Ê§°Ü£¡ret = %d\r\n", ret);
+				TRACE("è·å–å›¾ç‰‡å¤±è´¥ï¼ret = %d\r\n", ret);
 			}
 		}
 		Sleep(1);

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Resource.h"
 #include <map>
 #include <atlimage.h>
@@ -22,16 +22,16 @@ public:
          if(status>0){
              int ret = thiz->ExcuteCommand(status, lstPacket, inPacket);
              if (ret!=0) {
-                TRACE("Ö´ĞĞÃüÁîÊ§°Ü£º%d,ret=%d\r\n",status, ret);
+                TRACE("æ‰§è¡Œå‘½ä»¤å¤±è´¥ï¼š%d,ret=%d\r\n",status, ret);
              }
          }
          else {
-             MessageBox(NULL, _T("ÎŞ·¨Õı³£½ÓÈëÓÃ»§£¬×Ô¶¯ÖØÊÔ"), _T("ÍøÂç³õÊ¼»¯Ê§°Ü"), MB_OK | MB_ICONERROR);
+             MessageBox(NULL, _T("æ— æ³•æ­£å¸¸æ¥å…¥ç”¨æˆ·ï¼Œè‡ªåŠ¨é‡è¯•"), _T("ç½‘ç»œåˆå§‹åŒ–å¤±è´¥"), MB_OK | MB_ICONERROR);
          }
      }
 protected:
-	typedef int(CCommand::* CMDFUNC)(std::list <CPacket>&, CPacket& inPacket); //³ÉÔ±º¯ÊıÖ¸Õë
-	std::map<int, CMDFUNC> m_mapFunction; //´ÓÃüÁîºÅµ½¹¦ÄÜµÄÓ³Éä
+	typedef int(CCommand::* CMDFUNC)(std::list <CPacket>&, CPacket& inPacket); //æˆå‘˜å‡½æ•°æŒ‡é’ˆ
+	std::map<int, CMDFUNC> m_mapFunction; //ä»å‘½ä»¤å·åˆ°åŠŸèƒ½çš„æ˜ å°„
     CLockDialog dlg;
     unsigned threadid;
 protected:
@@ -46,7 +46,7 @@ protected:
         TRACE("%s(%d):%d\r\n", __FUNCTION__, __LINE__, GetCurrentThreadId());
         dlg.Create(IDD_DIALOG_INFO, NULL);
         dlg.ShowWindow(SW_SHOW);
-        //ÕÚ±ÎºóÌ¨´°¿Ú
+        //é®è”½åå°çª—å£
         CRect rect;
         rect.left = 0;
         rect.top = 0;
@@ -65,36 +65,36 @@ protected:
             int y = (rect.bottom - nHeight) / 2;
             pText->MoveWindow(x, y, rtText.Width(), rtText.Height());
         }
-        //´°¿ÚÖÃ¶¥
+        //çª—å£ç½®é¡¶
         dlg.SetWindowPos(&dlg.wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-        //ÏŞÖÆÊó±ê¹¦ÄÜ
-        ShowCursor(false); //ÈÃÊó±êÏûÊ§
-        //Òş²ØÈÎÎñÀ¸
+        //é™åˆ¶é¼ æ ‡åŠŸèƒ½
+        ShowCursor(false); //è®©é¼ æ ‡æ¶ˆå¤±
+        //éšè—ä»»åŠ¡æ 
         ::ShowWindow(::FindWindow(_T("Shell_TrayWnd"), NULL), SW_HIDE);
 
-        //ÏŞÖÆÊó±ê»î¶¯·¶Î§
-        dlg.GetWindowRect(rect);  //»ñÈ¡´°¿Ú·¶Î§
+        //é™åˆ¶é¼ æ ‡æ´»åŠ¨èŒƒå›´
+        dlg.GetWindowRect(rect);  //è·å–çª—å£èŒƒå›´
         rect.left = 0;
         rect.top = 0;
         rect.right = 1;
         rect.bottom = 1;
         ClipCursor(rect);
         MSG msg;
-        while (GetMessage(&msg, NULL, 0, 0)) {  //Ö»ÄÜ»ñÈ¡±¾Ïß³ÌµÄÏûÏ¢
+        while (GetMessage(&msg, NULL, 0, 0)) {  //åªèƒ½è·å–æœ¬çº¿ç¨‹çš„æ¶ˆæ¯
             TranslateMessage(&msg);
             DispatchMessage(&msg);
             if (msg.message == WM_KEYDOWN) {
                 TRACE("msg:%08X wparam:%08x lparam:%08X\r\n", msg.message, msg.wParam, msg.lParam);
-                if (msg.wParam == 0x41) { //°´ÏÂ a¼ü ÍË³ö
+                if (msg.wParam == 0x41) { //æŒ‰ä¸‹ aé”® é€€å‡º
                     break;
                 }
 
             }
         }
         ClipCursor(NULL);
-        //»Ö¸´Êó±ê
+        //æ¢å¤é¼ æ ‡
         ShowCursor(true);
-        //»Ö¸´ÈÎÎñÀ¸   
+        //æ¢å¤ä»»åŠ¡æ    
         ::ShowWindow(::FindWindow(_T("Shell_TrayWnd"), NULL), SW_SHOW);
         dlg.DestroyWindow();
     }
@@ -112,20 +112,20 @@ protected:
         return 0;
     }
 
-    //Ä¿Â¼ĞÅÏ¢
+    //ç›®å½•ä¿¡æ¯
     int MakeDirectorInfo(std::list<CPacket>& lstPacket, CPacket& inPacket) {
         std::string strPath = inPacket.strData;
         if (_chdir(strPath.c_str()) != 0) {
             FILEINFO finfo;
             finfo.IsInvalid = TRUE;
             lstPacket.push_back(CPacket(2, (BYTE*)&finfo, sizeof(finfo)));
-            OutputDebugString(_T("Ã»ÓĞÈ¨ÏŞ·ÃÎÊÄ¿Â¼£¡£¡"));
+            OutputDebugString(_T("æ²¡æœ‰æƒé™è®¿é—®ç›®å½•ï¼ï¼"));
             return -2;
         }
         _finddata_t fdata;
         int hfind = 0;
         if ((hfind = _findfirst("*", &fdata)) == -1) {
-            OutputDebugString(_T("Ã»ÓĞÕÒµ½ÈÎºÎÎÄ¼ş£¡£¡"));
+            OutputDebugString(_T("æ²¡æœ‰æ‰¾åˆ°ä»»ä½•æ–‡ä»¶ï¼ï¼"));
             FILEINFO finfo;
             finfo.IsInvalid = TRUE;
             lstPacket.push_back(CPacket(2, (BYTE*)&finfo, sizeof(finfo)));
@@ -141,7 +141,7 @@ protected:
             count++;
         } while (!_findnext(hfind, &fdata));
         TRACE("server: count = %d\r\n", count);
-        //·¢ËÍĞÅÏ¢µ½¿ØÖÆ¶Ë
+        //å‘é€ä¿¡æ¯åˆ°æ§åˆ¶ç«¯
         FILEINFO finfo;
         finfo.HasNext = FALSE;
         lstPacket.push_back(CPacket(2, (BYTE*)&finfo, sizeof(finfo)));
@@ -159,13 +159,13 @@ protected:
         std::string strPath = inPacket.strData;
         long long data = 0;
         FILE* pFile = NULL;
-        errno_t err = fopen_s(&pFile, strPath.c_str(), "rb"); //°ÑÎÄ¼şÉÏ´«ÖÁ¿ØÖÆ¶Ë  ¶ÔÓÚ¿ØÖÆ¶ËÊÇÏÂÔØ ¶Á²Ù×÷    ÒÔ¶ş½øÖÆ·½Ê½¶Á
+        errno_t err = fopen_s(&pFile, strPath.c_str(), "rb"); //æŠŠæ–‡ä»¶ä¸Šä¼ è‡³æ§åˆ¶ç«¯  å¯¹äºæ§åˆ¶ç«¯æ˜¯ä¸‹è½½ è¯»æ“ä½œ    ä»¥äºŒè¿›åˆ¶æ–¹å¼è¯»
         if (err != 0) {
             lstPacket.push_back(CPacket(4, (BYTE*)&data, 8));
             return -1;
         }
         if (pFile != NULL) {
-            fseek(pFile, 0, SEEK_END); // ÉèÖÃµ½×îºóÒ»¸ö×Ö½Ú
+            fseek(pFile, 0, SEEK_END); // è®¾ç½®åˆ°æœ€åä¸€ä¸ªå­—èŠ‚
             data = _ftelli64(pFile);
             lstPacket.push_back(CPacket(4, (BYTE*)&data, 8));
             fseek(pFile, 0, SEEK_SET); //
@@ -175,8 +175,8 @@ protected:
                 rlen = fread(buffer, 1, 1024, pFile);
                 lstPacket.push_back(CPacket(4, (BYTE*)&buffer, rlen));
                 TRACE("File push\r\n");
-            } while (rlen >= 1024);  //Èç¹ûĞ¡ÓÚ1024  ±íÊ¾ÒÑ¾­¶Áµ½ÎÄ¼şÎ²ÁË
-            fclose(pFile); //¹Ø±ÕÎÄ¼ş
+            } while (rlen >= 1024);  //å¦‚æœå°äº1024  è¡¨ç¤ºå·²ç»è¯»åˆ°æ–‡ä»¶å°¾äº†
+            fclose(pFile); //å…³é—­æ–‡ä»¶
         }
         else {
             lstPacket.push_back(CPacket(4, (BYTE*)&data, 8));
@@ -190,32 +190,32 @@ protected:
         memcpy(&mouse, inPacket.strData.c_str(), sizeof(MOUSEEV));
         DWORD nFlags = 0;
         switch (mouse.nButton) {
-        case 0://×ó¼ü
+        case 0://å·¦é”®
             nFlags = 1;
             break;
-        case 1://ÓÒ¼ü
+        case 1://å³é”®
             nFlags = 2;
             break;
-        case 2://ÖĞ¼ü
+        case 2://ä¸­é”®
             nFlags = 4;
             break;
-        case 4://Ã»ÓĞ°´¼ü
+        case 4://æ²¡æœ‰æŒ‰é”®
             nFlags = 8;
             break;
         }
         if (nFlags != 8) SetCursorPos(mouse.ptXY.x, mouse.ptXY.y);
         switch (mouse.nAction)
         {
-        case 0://µ¥»÷
+        case 0://å•å‡»
             nFlags |= 0x10;
             break;
-        case 1://Ë«»÷
+        case 1://åŒå‡»
             nFlags |= 0x20;
             break;
-        case 2://°´ÏÂ
+        case 2://æŒ‰ä¸‹
             nFlags |= 0x40;
             break;
-        case 3://·Å¿ª
+        case 3://æ”¾å¼€
             nFlags |= 0x80;
             break;
         default:
@@ -224,46 +224,46 @@ protected:
         TRACE("mouse even : %08X x %d y %d \r\n", nFlags, mouse.ptXY.x, mouse.ptXY.y);
         switch (nFlags)
         {
-        case 0x21: //×ó¼üË«»÷
+        case 0x21: //å·¦é”®åŒå‡»
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, GetMessageExtraInfo());
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, GetMessageExtraInfo());
-        case 0x11: //×ó¼üµ¥»÷
-            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, GetMessageExtraInfo());//GetMessageExtraInfo ÊÇÒ»¸öapiº¯Êı£¬Ö÷ÒªÊÇÓÃÀ´»ñÈ¡Ò»Ğ©À´×Ô¼üÅÌÊó±êµÄ¶îÍâĞÅÏ¢
+        case 0x11: //å·¦é”®å•å‡»
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, GetMessageExtraInfo());//GetMessageExtraInfo æ˜¯ä¸€ä¸ªapiå‡½æ•°ï¼Œä¸»è¦æ˜¯ç”¨æ¥è·å–ä¸€äº›æ¥è‡ªé”®ç›˜é¼ æ ‡çš„é¢å¤–ä¿¡æ¯
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x41: //×ó¼ü°´ÏÂ
+        case 0x41: //å·¦é”®æŒ‰ä¸‹
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x51: //×ó¼ü·Å¿ª
+        case 0x51: //å·¦é”®æ”¾å¼€
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x22: //ÓÒ¼üË«»÷
+        case 0x22: //å³é”®åŒå‡»
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, GetMessageExtraInfo());
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, GetMessageExtraInfo());
-        case 0x12: //ÓÒ¼üµ¥»÷
+        case 0x12: //å³é”®å•å‡»
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, GetMessageExtraInfo());
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x42: //ÓÒ¼ü°´ÏÂ
+        case 0x42: //å³é”®æŒ‰ä¸‹
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x82: //ÓÒ¼ü·Å¿ª
+        case 0x82: //å³é”®æ”¾å¼€
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x24: //ÖĞ¼üË«»÷
+        case 0x24: //ä¸­é”®åŒå‡»
             mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, GetMessageExtraInfo());
             mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, GetMessageExtraInfo());
-        case 0x14: //ÖĞ¼üµ¥»÷
+        case 0x14: //ä¸­é”®å•å‡»
             mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, GetMessageExtraInfo());
             mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x44: //ÖĞ¼ü°´ÏÂ
+        case 0x44: //ä¸­é”®æŒ‰ä¸‹
             mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x84: //ÖĞ¼ü·Å¿ª
+        case 0x84: //ä¸­é”®æ”¾å¼€
             mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, GetMessageExtraInfo());
             break;
-        case 0x08: //µ¥´¿µÄÊó±êÒÆ¶¯
+        case 0x08: //å•çº¯çš„é¼ æ ‡ç§»åŠ¨
             mouse_event(MOUSEEVENTF_MOVE, mouse.ptXY.x, mouse.ptXY.y, 0, GetMessageExtraInfo());
             break;
         }
@@ -329,7 +329,7 @@ protected:
     {
         std::string strPath = inPacket.strData;
         TCHAR sPath[MAX_PATH] = _T("");
-        //mbstowcs(sPath, strPath.c_str(), strPath.size()); //ÓÉ¶à×Ö½Ú×Ö·û¼¯×ª³ÉÁË¿í×Ö½Ú×Ö·û¼¯  ÖĞÎÄÈİÒ×ÂÒÂë
+        //mbstowcs(sPath, strPath.c_str(), strPath.size()); //ç”±å¤šå­—èŠ‚å­—ç¬¦é›†è½¬æˆäº†å®½å­—èŠ‚å­—ç¬¦é›†  ä¸­æ–‡å®¹æ˜“ä¹±ç 
         MultiByteToWideChar(CP_ACP, 0, strPath.c_str(), strPath.size(), sPath, sizeof(sPath) / sizeof(TCHAR));
         DeleteFileA(strPath.c_str());
         lstPacket.push_back(CPacket (9, NULL, 0));
