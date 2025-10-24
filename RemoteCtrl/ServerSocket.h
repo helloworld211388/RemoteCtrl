@@ -36,7 +36,6 @@ public:
 		
 		return true;
 	}
-
 	int Run(SOCKET_CALLBACK callback, void* arg, short port = 9527) {
 		//1 进度的可控性  2  对接的方便性  3 可行性评估，提早暴露风险
 		// TODO: socket、bind、listen、accept、read、write、close
@@ -97,15 +96,15 @@ protected:
 			TRACE("recv %d\r\n", len);
 			index += len;
 			len = index;
-			m_packet = CPacket((BYTE*)buffer, len);
+			m_packet = CPacket((BYTE*)buffer, len);//len会被修改成实际利用的数据字节数
 			if (len > 0) {
-				memmove(buffer, buffer + len, BUFFER_SIZE - len);
+				memmove(buffer, buffer + len, BUFFER_SIZE - len);//使用memmove将剩下的数据移到buffer开头以后，为什么还要delete buffer呢，这样不是丢失了他们吗
 				index -= len;
 				delete[]buffer;
 				return m_packet.sCmd;
 			}
 		}
-		delete[]buffer;
+		delete[]buffer;//永远不会运行到
 		return -1;
 	}
 
@@ -126,11 +125,13 @@ protected:
 		}
 	}
 private:
+	static CServerSocket* m_instance;
 	SOCKET_CALLBACK m_callback;
 	void* m_arg;
 	SOCKET m_client;
 	SOCKET m_sock;
 	CPacket m_packet;
+	
 	CServerSocket& operator=(const CServerSocket& ss) {}
 	CServerSocket(const CServerSocket& ss) {
 		m_sock = ss.m_sock;
@@ -164,7 +165,7 @@ private:
 			delete tmp;
 		}
 	}
-	static CServerSocket* m_instance;
+	
 	class CHelper {
 	public:
 		CHelper() {

@@ -6,4 +6,4 @@
 CServerSocket* CServerSocket::m_instance = NULL;
 CServerSocket::CHelper CServerSocket::m_helper;
 
-CServerSocket* pserver = CServerSocket::getInstance();
+//CServerSocket* pserver = CServerSocket::getInstance();  这句话好像不该有

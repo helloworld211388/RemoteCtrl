@@ -18,6 +18,7 @@ public:
 	~CCommand();
 	 int ExcuteCommand(int nCmd, std::list<CPacket>& lstPacket,CPacket& inPacket);
      static void RunCommand(void* arg, int status, std::list <CPacket>& lstPacket, CPacket& inPacket) {
+
          CCommand* thiz = (CCommand*)arg;
          if(status>0){
              int ret = thiz->ExcuteCommand(status, lstPacket, inPacket);
@@ -26,7 +27,7 @@ public:
              }
          }
          else {
-             MessageBox(NULL, _T("无法正常接入用户，自动重试"), _T("网络初始化失败"), MB_OK | MB_ICONERROR);
+			 MessageBoxW(NULL, _T("无法正常接入用户，自动重试"), _T("网络初始化失败"), MB_OK | MB_ICONERROR);
          }
      }
 protected:
@@ -38,8 +39,8 @@ protected:
     static unsigned __stdcall threadLockDlg(void* arg)
     {
         CCommand* thiz = (CCommand*)arg;
-        thiz->threadLockDlgMain();
-        _endthreadex(0);
+        thiz->threadLockDlgMain();//锁定窗口
+        _endthreadex(0);//结束线程
         return 0;
     }
     void threadLockDlgMain() {
@@ -159,7 +160,7 @@ protected:
         std::string strPath = inPacket.strData;
         long long data = 0;
         FILE* pFile = NULL;
-        errno_t err = fopen_s(&pFile, strPath.c_str(), "rb"); //把文件上传至控制端  对于控制端是下载 读操作    以二进制方式读
+        errno_t err = fopen_s(&pFile, strPath.c_str(), "rb"); //以二进制只读方式打开一个文件，准备把它的内容发送给控制端（远程操作者），实现“文件下载”功能。
         if (err != 0) {
             lstPacket.push_back(CPacket(4, (BYTE*)&data, 8));
             return -1;
@@ -281,10 +282,12 @@ protected:
         screen.Create(nWidth, nHeight, nBitPerPixel);
         BitBlt(screen.GetDC(), 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
         ReleaseDC(NULL, hScreen);
+
         HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, 0);
         if (hMem == NULL) return -1;
         IStream* pStream = NULL;
         HRESULT ret = CreateStreamOnHGlobal(hMem, TRUE, &pStream);
+
         if (ret == S_OK) {
             screen.Save(pStream, Gdiplus::ImageFormatPNG);
             LARGE_INTEGER bg = { 0 };

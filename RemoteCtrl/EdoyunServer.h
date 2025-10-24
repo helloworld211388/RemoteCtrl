@@ -5,9 +5,9 @@
 #include <map>
 #include "Command.h"
 
-static CCommand m_cmd;
+static CCommand m_cmd;//静态全局命令处理对象
 
-enum EdoyunOperator {
+enum EdoyunOperator {//标识异步操作类型
     ENone,
     EAccept,
     ERecv,
@@ -17,29 +17,29 @@ enum EdoyunOperator {
 
 class EdoyunServer;
 class EdoyunClient;
-typedef std::shared_ptr<EdoyunClient> PCLIENT;
+typedef std::shared_ptr<EdoyunClient> PCLIENT;//客户端智能指针
 
-class EdoyunOverlapped {
+class EdoyunOverlapped {//封装异步io操作的相关数据
 public:
-    OVERLAPPED m_overlapped;
+    OVERLAPPED m_overlapped;//凭借它来追中管理每次io请求
     DWORD m_operator; //操作  参加EdoyunOperator
-    std::vector<char> m_buffer; //缓冲区
+    std::vector<char> m_buffer; //缓冲区，使用vector类可以动态调整缓冲区大小，并且不用手动分配与释放
     ThreadWorker m_worker;//处理函数
     EdoyunServer* m_server; //服务器对象
     EdoyunClient* m_client; //对应的客户端
-    WSABUF m_wsabuffer;
+    WSABUF m_wsabuffer;//在异步操作中，告诉系统要发送的数据的具体位置与大小
     virtual ~EdoyunOverlapped() {
         m_buffer.clear();
     }
-};
+}; 
 template<EdoyunOperator>class AcceptOverlapped;
-typedef AcceptOverlapped<EAccept> ACCEPTOVERLAPPED;
+typedef AcceptOverlapped<EAccept> LPACPOVERLAPPED;
 template<EdoyunOperator>class RecvOverlapped;
 typedef RecvOverlapped<ERecv> RECVOVERLAPPED;
 template<EdoyunOperator>class SendOverlapped;
 typedef SendOverlapped<ESend> SENDOVERLAPPED;
 
-class EdoyunClient:public ThreadFuncBase {
+class EdoyunClient:public ThreadFuncBase {//表示一个链接的客户端
 public:
     EdoyunClient();
 
@@ -47,7 +47,7 @@ public:
         closesocket(m_sock);
         m_recv.reset();
         m_send.reset();
-        m_overlapped.reset();
+        m_accept.reset();
         m_buffer.clear();
     }
 
@@ -79,7 +79,7 @@ public:
     SOCKET m_sock;
     DWORD m_received;
     DWORD m_flags;
-    std::shared_ptr<ACCEPTOVERLAPPED> m_overlapped;
+    std::shared_ptr<LPACPOVERLAPPED> m_accept;
     std::shared_ptr<RECVOVERLAPPED>m_recv;
     std::shared_ptr<SENDOVERLAPPED>m_send;
     std::list<CPacket> recvPackets;
@@ -103,19 +103,21 @@ class RecvOverlapped :public EdoyunOverlapped, ThreadFuncBase
 public:
     RecvOverlapped();
     int RecvWorker() {
-        int index = 0;
-        
-            int len = m_client->Recv();
-                index += len;
-                CPacket pack((BYTE*)m_client->m_buffer.data(), (size_t&)index);
-                m_cmd.ExcuteCommand(pack.sCmd, m_client->sendPackets, pack);
+
+        int index = 0;        
+        int len = m_client->Recv();
+        index += len;
+
+        CPacket pack((BYTE*)m_client->m_buffer.data(), (size_t&)index);
+
+        m_cmd.ExcuteCommand(pack.sCmd, m_client->sendPackets, pack);
                
-                if (index == 0) {
-                    WSASend((SOCKET)*m_client, m_client->SendWSABuffer(), 1, *m_client, m_client->flags(), m_client->SendOverlapped(), NULL);
-                    TRACE("命令: %d\r\n", pack.sCmd);
+        if (index == 0) {
+            WSASend((SOCKET)*m_client, m_client->SendWSABuffer(), 1, *m_client, m_client->flags(), m_client->SendOverlapped(), NULL);
+            TRACE("命令: %d\r\n", pack.sCmd);
                    
                    
-                }
+        }
        // WSASend(m_client->m_sock, m_client->m_send->m_wsabuffer, 1, &m_client->m_buffer, 0, m_client->m_send->m_overlapped);
        
         return -1;
@@ -173,14 +175,15 @@ typedef ErrorOverlapped<EError> ERROROVERLAPPED;
 
 
 
-class EdoyunServer :
+class EdoyunServer ://服务器主类，负责监听，管理客户端连接，线程池，iocp等
     public ThreadFuncBase
 {
 public:
+	
     EdoyunServer(const std::string& ip = "0.0.0.0", short port = 9527) : m_pool(10) {
         m_hIOCP = INVALID_HANDLE_VALUE;
         m_sock = INVALID_SOCKET;
-        m_addr.sin_family = AF_INET;
+        m_addr.sin_family = AF_INET;//在创建套接字的时候已经制定了地址族，这里再指定一次是为了双重校验
         m_addr.sin_port = htons(port);
         m_addr.sin_addr.s_addr = inet_addr(ip.c_str());
     }

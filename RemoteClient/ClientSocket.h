@@ -39,7 +39,7 @@ public:
 		strData = pack.strData;
 		sSum = pack.sSum;
 	}
-	CPacket(const BYTE* pData, size_t& nSize){
+	CPacket(const BYTE* pData, size_t& nSize){//nSize 既是输入（当前缓冲区长度），也是输出（本次解析消耗的长度），用于判断和处理数据包的完整性。这是网络编程中常见的做法，避免因数据包拆分或粘包导致解析错误。
 		size_t i = 0;
 		for (; i < nSize; i++) {
 			if (*(WORD*)(pData + i) == 0xFEFF) {
@@ -102,7 +102,7 @@ public:
 	}
 public:
 	WORD sHead; //固定位 0xFEFF
-	DWORD nLength; //包长度（从控制命令开始，到和校验结束）
+	DWORD nLength; //包长度（从控制命令开始，到和校验结束），Dword是word字节数的两倍，能表示更多
 	WORD sCmd;    //控制命令
 	std::string strData; //包数据
 	WORD sSum; //和校验
@@ -111,7 +111,7 @@ public:
 #pragma pack(pop)
 
 typedef struct MouseEvent {
-	MouseEvent() {
+	MouseEvent() {//结构体的默认构造函数
 		nAction = 0;
 		nButton = -1; //如果置成0，默认就是左键  置成-1，一旦出现问题，说明参数设置有问题
 		ptXY.x = 0;
@@ -136,7 +136,7 @@ typedef struct file_info {
 
 }FILEINFO, * PFILEINFO;
 
-enum {
+enum {//使用enum来将1定义为一个特殊的常量，这种方法的优点在于将来可以拓展
 	CSM_AUTOCLOSE=1, //CSM =Client Socket Mode  自动关闭模式
 };
 typedef struct PacketData{
