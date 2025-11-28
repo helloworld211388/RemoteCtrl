@@ -58,7 +58,7 @@ public:
 	afx_msg void OnTvnSelchangedTreeDir(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnNMClickTreeDir(NMHDR* pNMHDR, LRESULT* pResult);
 	// 显示文件
-	CListCtrl m_List;
+	CListCtrl m_List;//文件信息表格
 	afx_msg void OnNMRClickListFile(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDownloadFile();
 	afx_msg void OnDeleteFile();

@@ -3,7 +3,7 @@
 #include "framework.h"
 #include <list>
 #include "Packet.h"
-
+ //这个类实际上被弃置了，目前完成其功能的是edoyunserver
 
 typedef void(*SOCKET_CALLBACK)(void* arg,int status, std::list <CPacket>&,CPacket&);
 

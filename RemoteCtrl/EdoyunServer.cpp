@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "EdoyunServer.h"
-#include "EdoyunTool.h"
+#include "EdoyunTool.h" 
 
 #pragma warning(disable:4407)
 template<EdoyunOperator op>

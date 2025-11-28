@@ -4,7 +4,7 @@
 #include "CEdoyunQueue.h"
 #include <map>
 #include "Command.h"
-
+ 
 static CCommand m_cmd;//静态全局命令处理对象
 
 enum EdoyunOperator {//标识异步操作类型

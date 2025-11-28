@@ -1,6 +1,5 @@
 ﻿// LockDialog.cpp: 实现文件
-//这个类目前没有增加任何实现，只是复用了cdialog，它的作用是在服务端进行锁屏操作以后，用这个窗口覆盖整个屏幕
-
+//这个类目前没有增加任何实现，只是复用了cdialog，它的作用是在服务端进行锁屏操作以后，用这个窗口覆盖整个屏幕 
 #include "pch.h"
 #include "RemoteCtrl.h"
 #include "afxdialogex.h"

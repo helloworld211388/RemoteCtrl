@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Command.h"
-
+ 
 CCommand::CCommand() : threadid(0)
 {
 	struct {

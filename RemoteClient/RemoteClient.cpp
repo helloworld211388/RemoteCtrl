@@ -1,19 +1,17 @@
-﻿
-// RemoteClient.cpp: 定义应用程序的类行为。
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 #include "framework.h"
 #include "RemoteClient.h"
 #include "ClientController.h"
 
+
+//启用内存调试，以后可以报告，每次new发生在哪个文件的第几行
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CRemoteClientApp
 
+//当点击帮助按钮时，会发送ID_HELP信号，从而出发OnHelp函数
 BEGIN_MESSAGE_MAP(CRemoteClientApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
@@ -26,56 +24,44 @@ CRemoteClientApp::CRemoteClientApp()
 	// 支持重新启动管理器
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
-	// TODO: 在此处添加构造代码，
-	// 将所有重要的初始化放置在 InitInstance 中
 }
 
 
 // 唯一的 CRemoteClientApp 对象
+CRemoteClientApp theApp;//对于变量，只要没有extern 就是定义，会分配内存
 
-CRemoteClientApp theApp;
+//对于函数，主要没有{}就是声明，有就是定义
 
 
 // CRemoteClientApp 初始化
 
 BOOL CRemoteClientApp::InitInstance()
 {
-	// 如果一个运行在 Windows XP 上的应用程序清单指定要
-	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
-	//则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
-	INITCOMMONCONTROLSEX InitCtrls;
+	//初始化通用控件
+	INITCOMMONCONTROLSEX InitCtrls;//配置结构体
 	InitCtrls.dwSize = sizeof(InitCtrls);
-	// 将它设置为包括所有要在应用程序中使用的
-	// 公共控件类。
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
+	InitCtrls.dwICC = ICC_WIN95_CLASSES;//启用win95风格的控件
 	InitCommonControlsEx(&InitCtrls);
 
-	CWinApp::InitInstance();
+	CWinApp::InitInstance();//调用父类的初始化逻辑
+	AfxEnableControlContainer();//允许在对话框中采用ActiveX控件
 
-
-	AfxEnableControlContainer();
-
-	// 创建 shell 管理器，以防对话框包含
-	// 任何 shell 树视图控件或 shell 列表视图控件。
+	// 创建 shell 管理器，为对话框中可能出现的文件浏览器相关控件（如树形视图、列表视图）提供支持
 	CShellManager *pShellManager = new CShellManager;
 
 	// 激活“Windows Native”视觉管理器，以便在 MFC 控件中启用主题
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
 
-	// 标准初始化
-	// 如果未使用这些功能并希望减小
-	// 最终可执行文件的大小，则应移除下列
-	// 不需要的特定初始化例程
-	// 更改用于存储设置的注册表项
-	// TODO: 应适当修改该字符串，
-	// 例如修改为公司或组织名
+	//设置Windows注册表的根键位置，用于保存应用程序设置
+	//MFC会在注册表中自动保存用户偏好设置，这行代码指定保存位置。
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
+	//1.初始化应用程序的业务逻辑控制器
+	//2.调用控制器的 Invoke 方法显示主窗口 / 对话框
+    //3.获取用户的响应（确定 / 取消 / 错误）
 	CClientController::getInstance()->InitController();
-	INT_PTR nResponse = CClientController::getInstance()->Invoke
-	(m_pMainWnd);
-	//m_pMainWnd = &dlg;
-	//INT_PTR nResponse = dlg.DoModal();
+	INT_PTR nResponse = CClientController::getInstance()->Invoke(m_pMainWnd);
+
 	if (nResponse == IDOK)
 	{
 		// TODO: 在此放置处理何时用
@@ -98,7 +84,7 @@ BOOL CRemoteClientApp::InitInstance()
 		delete pShellManager;
 		TRACE("shell manager has deleted!");
 	}
-
+	//清理资源
 #if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
 	ControlBarCleanUp();
 #endif

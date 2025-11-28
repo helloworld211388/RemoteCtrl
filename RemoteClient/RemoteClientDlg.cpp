@@ -93,7 +93,7 @@ END_MESSAGE_MAP()
 
 
 // CRemoteClientDlg 消息处理程序
-
+//远程文件管理对话框
 BOOL CRemoteClientDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -120,13 +120,13 @@ BOOL CRemoteClientDlg::OnInitDialog()
 
 
 
-	// TODO: 在此添加额外的初始化代码
+	// 初始化ui数据
 	InitUIData();
 	
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
-void CRemoteClientDlg::OnSysCommand(UINT nID, LPARAM lParam)
+void CRemoteClientDlg::OnSysCommand(UINT nID, LPARAM lParam)//检查收到的命令是否是关于"关于"菜单项的，然后做出相应反应。
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
@@ -143,7 +143,7 @@ void CRemoteClientDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  来绘制该图标。  对于使用文档/视图模型的 MFC 应用程序，
 //  这将由框架自动完成。
 
-void CRemoteClientDlg::OnPaint()
+void CRemoteClientDlg::OnPaint()//当窗口被最小化时，它会显示一个图标；当窗口正常显示时，它会显示完整的对话框内容。OnPaint() 函数就是负责决定画什么到屏幕上的。
 {
 	if (IsIconic())
 	{
@@ -185,7 +185,7 @@ void CRemoteClientDlg::OnBnClickedBtnTest()
 void CRemoteClientDlg::OnBnClickedBtnFileinfo()
 {
 	std::list<CPacket> lstPackets;
-	int ret = CClientController::getInstance()->SendCommandPacket(GetSafeHwnd(), 1, true, NULL, 0);
+	int ret = CClientController::getInstance()->SendCommandPacket(GetSafeHwnd(), 1, true, NULL, 0);//窗口发送请求，都是通过控制器间接给clientsocket发送请求，但是client之后会直接给窗口的句柄发送消息，以返回响应
 	if (ret == 0 ) {
 		AfxMessageBox(_T("命令处理失败！！！"));
 		return;
@@ -241,7 +241,7 @@ void CRemoteClientDlg::InitUIData()
 	m_dlgStatus.ShowWindow(SW_HIDE);
 }
 
-void CRemoteClientDlg::LoadFileCurrent()
+void CRemoteClientDlg::LoadFileCurrent()//从远程服务器加载当前选中目录中的所有文件，并在客户端的列表控件中显示这些文件。
 {
 	HTREEITEM hTree = m_Tree.GetSelectedItem();
 	CString strPath = GetPath(hTree);
@@ -261,7 +261,7 @@ void CRemoteClientDlg::LoadFileCurrent()
 	}
 	//CClientController::getInstance()->CloseSocket();
 }
-void CRemoteClientDlg::Str2Tree(const std::string& drivers, CTreeCtrl& tree)
+void CRemoteClientDlg::Str2Tree(const std::string& drivers, CTreeCtrl& tree)//这个函数的作用是将远程服务器的磁盘驱动器信息转换为树形控件的展示结构。用比喻来说，它就像是把一个逗号分隔的字符串"翻译"成可视化的"文件夹树"。
 {
 	std::string dr;
 	tree.DeleteAllItems();
@@ -282,7 +282,7 @@ void CRemoteClientDlg::Str2Tree(const std::string& drivers, CTreeCtrl& tree)
 		tree.InsertItem(NULL, hTemp, TVI_LAST);
 	}
 }
-void CRemoteClientDlg::UpdateFileInfo(const FILEINFO& finfo,HTREEITEM hParent)
+void CRemoteClientDlg::UpdateFileInfo(const FILEINFO& finfo,HTREEITEM hParent)//远程文件树结构。当客户端从服务器接收到文件/文件夹信息时，它负责把这些信息"填充"到UI界面的树形控件或列表控件中。
 {
 	TRACE("hasnext %d isdirectory %d %s\r\n", finfo.HasNext, finfo.IsDirectory, finfo.szFileName);
 	if (finfo.HasNext == FALSE) return;
@@ -291,14 +291,14 @@ void CRemoteClientDlg::UpdateFileInfo(const FILEINFO& finfo,HTREEITEM hParent)
 			return;
 		TRACE("hselected %08X %08X\r\n", hParent, m_Tree.GetSelectedItem());
 		HTREEITEM hTemp = m_Tree.InsertItem(finfo.szFileName, (HTREEITEM)hParent);
-		m_Tree.InsertItem("", hTemp, TVI_LAST);
+		m_Tree.InsertItem("", hTemp, TVI_LAST);//插入一个空的子项，使得这个文件夹前面有一个三角形的按钮
 		m_Tree.Expand(hParent, TVE_EXPAND);
 	}
 	else {
 		m_List.InsertItem(0, finfo.szFileName);
 	}
 }
-void CRemoteClientDlg::UpdateDownloadFile(const std::string& strData, FILE* pFile)
+void CRemoteClientDlg::UpdateDownloadFile(const std::string& strData, FILE* pFile)//在网上下载一个大文件。不是一次性把整个文件发给你，而是分成多个数据包逐步发送。这个函数就是负责"接收并拼装"这些数据包的
 {
 	static LONGLONG length = 0, index = 0;
 	TRACE("length %d index %d\r\n", length, index);
@@ -327,7 +327,7 @@ void CRemoteClientDlg::UpdateDownloadFile(const std::string& strData, FILE* pFil
 		}
 	}
 }
-void CRemoteClientDlg::LoadFileInfo()
+void CRemoteClientDlg::LoadFileInfo()//获得特定目录下的所有文件信息
 {
 	CClientSocket* pClient = CClientSocket::getInstance();
 	CPoint ptMouse;
@@ -346,7 +346,7 @@ void CRemoteClientDlg::LoadFileInfo()
 	CClientController::getInstance()->SendCommandPacket(GetSafeHwnd(), 2, false, (BYTE*)(LPCTSTR)strPath, strPath.GetLength(),(WPARAM)hTreeSelected);
 
 }
-CString CRemoteClientDlg::GetPath(HTREEITEM hTree)
+CString CRemoteClientDlg::GetPath(HTREEITEM hTree)//树结构中的节点层级转换回文件系统的路径字符串。
 {
 	CString strRet, strTmp;
 	do {
@@ -358,7 +358,7 @@ CString CRemoteClientDlg::GetPath(HTREEITEM hTree)
 	return  strRet;
 }
 
-void CRemoteClientDlg::DeleteTreeChildrenItem(HTREEITEM hTree)
+void CRemoteClientDlg::DeleteTreeChildrenItem(HTREEITEM hTree)//删除子节点信息
 {
 	HTREEITEM hSub = NULL;
 	do {
@@ -368,7 +368,7 @@ void CRemoteClientDlg::DeleteTreeChildrenItem(HTREEITEM hTree)
 	
 }
 
-void CRemoteClientDlg::OnTvnSelchangedTreeDir(NMHDR* pNMHDR, LRESULT* pResult)
+void CRemoteClientDlg::OnTvnSelchangedTreeDir(NMHDR* pNMHDR, LRESULT* pResult)//加载并显示选中目录下的文件信息
 {
 	
 	*pResult = 0;
@@ -376,7 +376,7 @@ void CRemoteClientDlg::OnTvnSelchangedTreeDir(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 
-void CRemoteClientDlg::OnNMClickTreeDir(NMHDR* pNMHDR, LRESULT* pResult)
+void CRemoteClientDlg::OnNMClickTreeDir(NMHDR* pNMHDR, LRESULT* pResult)//和上一个重复了，其实可以只用一个函数
 {
 	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 0;
@@ -386,30 +386,38 @@ void CRemoteClientDlg::OnNMClickTreeDir(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CRemoteClientDlg::OnNMRClickListFile(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 0;
-	CPoint ptMouse,ptList;
+	// 1. 获取全局鼠标坐标（屏幕坐标系）
+	CPoint ptMouse, ptList;
 	GetCursorPos(&ptMouse);
-	ptList = ptMouse; //一开始没给ptList 传值
+
+	// 2. 把屏幕坐标转换成列表框内的坐标（列表框坐标系）
+	ptList = ptMouse;
 	m_List.ScreenToClient(&ptList);
+
+	// 3. 检测鼠标点击是否击中了列表中的某一项
 	int ListSelected = m_List.HitTest(ptList);
-	if (ListSelected < 0) return; //如果没点中
+	if (ListSelected < 0) return;  // 没点中就退出
+
+	// 4. 加载菜单资源（从资源文件中读取菜单定义）
 	CMenu menu;
-	menu.LoadMenu(IDR_MENU_RCLICK);  //加载整个菜单资源
-	CMenu* pPupup = menu.GetSubMenu(0);   
+	menu.LoadMenu(IDR_MENU_RCLICK);
+	CMenu* pPupup = menu.GetSubMenu(0);
+
+	// 5. 在鼠标位置弹出菜单
 	if (pPupup != NULL) {
-		pPupup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, ptMouse.x, ptMouse.y, this); //弹出
+		pPupup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
+			ptMouse.x, ptMouse.y, this);
 	}
 }
 
 
 void CRemoteClientDlg::OnDownloadFile()
 {
-	int nListSelected = m_List.GetSelectionMark();//获得选择的标记
-	CString strFile = m_List.GetItemText(nListSelected, 0); // 拿到文件名
-	HTREEITEM hSelected = m_Tree.GetSelectedItem();
-	strFile = GetPath(hSelected) + strFile;
+	int nListSelected = m_List.GetSelectionMark();//获得列表框中被选中项的行号（索引）
+	CString strFile = m_List.GetItemText(nListSelected, 0); // 从具体的某一行以及第一列中获得文本内容
+	HTREEITEM hSelected = m_Tree.GetSelectedItem();//获取树节点信息
+	strFile = GetPath(hSelected) + strFile;//树节点路径拼接当前文件路径
 	int ret = CClientController::getInstance()->DownFile(strFile);
 	
 	if (ret != 0) {
@@ -420,7 +428,7 @@ void CRemoteClientDlg::OnDownloadFile()
 }
 
 
-void CRemoteClientDlg::OnDeleteFile()
+void CRemoteClientDlg::OnDeleteFile()//和上面那个逻辑处理几乎一致
 {
 	HTREEITEM hSelected = m_Tree.GetSelectedItem();
 	CString strPath = GetPath(hSelected);
@@ -431,11 +439,11 @@ void CRemoteClientDlg::OnDeleteFile()
 	if (ret < 0) {
 		AfxMessageBox("删除文件命令执行失败！！！");
 	}
-	LoadFileCurrent(); //TODO：文件夹中文件显示，有bug，会缺漏文件  已解决
+	LoadFileCurrent(); 
 }
 
 
-void CRemoteClientDlg::OnRunFile()
+void CRemoteClientDlg::OnRunFile()               
 {
 	HTREEITEM hSelected = m_Tree.GetSelectedItem();
 	CString strPath = GetPath(hSelected);

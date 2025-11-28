@@ -2,7 +2,7 @@
 #include "afxdialogex.h"
 
 
-// CLockDialog 对话框
+// CLockDialog 对话框 
 
 class CLockDialog : public CDialog
 {

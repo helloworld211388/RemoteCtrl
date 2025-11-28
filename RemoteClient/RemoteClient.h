@@ -15,7 +15,7 @@
 // 有关此类的实现，请参阅 RemoteClient.cpp
 //
 
-class CRemoteClientApp : public CWinApp
+class CRemoteClientApp : public CWinApp//继承这个类以后，可以实现windows消息处理
 {
 public:
 	CRemoteClientApp();
@@ -29,4 +29,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CRemoteClientApp theApp;
+extern CRemoteClientApp theApp;//对于变量，只要有external就是声明，不会分配内存

@@ -7,15 +7,13 @@
 #include "resource.h"
 #include "EdoyunTool.h"
 
-
+//下面是定义信号对应的数值
 //#define WM_SEND_DATA (WM_USER+2) //发送数据
-#define WM_SHOW_STATUS (WM_USER+3) //展示状态
+#define WM_SHOW_STATUS (WM_USER+3) //展示状态 •	WM_USER 是 Windows 预留给应用程序自定义消息的基础值（通常是 400）
 #define WM_SHOW_WATCH (WM_USER+4) //远程监控
 #define WM_SEND_MESSAGE (WM_USER+0x1000) //自定义消息处理
 
 
-//业务逻辑和流程， 是随时可能发生改变的！！！！！！
-//业务逻辑和流程， 是随时可能发生改变的！！！！！！
 //业务逻辑和流程， 是随时可能发生改变的！！！！！！
 
 class CClientController
@@ -58,6 +56,7 @@ public:
 		WPARAM wParam = 0);
 
 
+	//获取数据包中的image
 	int GetImage(CImage& image) {
 		CClientSocket* pClient = CClientSocket::getInstance();
 		return CEdoyunTool::Bytes2Image(image, pClient->GetPacket().strData);
@@ -68,7 +67,7 @@ public:
 
 	void StartWatchScreen();
 protected:
-	void threadWatchScreen();
+	void threadWatchScreen();//这两个同名函数，下面那个其实只是一个中介函数，这样命名有点不负责
 	static void threadWatchScreen(void* arg);
 	CClientController():
 		m_statusDlg(&m_remoteDlg),
@@ -121,14 +120,14 @@ private:
 	CWatchDialog m_watchDlg; //消息包，在对话框关闭之后，可能导致内存泄漏
 	CRemoteClientDlg m_remoteDlg;
 	CStatusDlg m_statusDlg;
-	HANDLE m_hThread;
-	HANDLE m_hThreadWatch;
+	HANDLE m_hThread;//处理消息的线程
+	HANDLE m_hThreadWatch;//监视服务器屏幕的线程
 	bool m_isClosed; //监视是否关闭
 	//下载文件的远程路径
 	CString m_strRemote; 
 	//下载文件的本地保存路径
 	CString m_strLocal;
-	unsigned  m_nThreadID;
+	unsigned  m_nThreadID;//记录处理消息线程的id
 	static CClientController* m_instance;
 	class CHelper {
 	public:

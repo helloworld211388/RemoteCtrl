@@ -1,7 +1,7 @@
 ﻿//{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ 生成的包含文件。
 // 供 RemoteCtrl.rc 使用
-//
+// 
 #define IDD_DIALOG_INFO                 9
 #define IDD_DIALOG1                     101
 #define IDS_APP_TITLE                   103

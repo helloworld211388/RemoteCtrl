@@ -34,7 +34,6 @@ void CWatchDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CWatchDialog, CDialogEx)
 	ON_WM_TIMER()
 	ON_STN_CLICKED(IDC_WATCH, &CWatchDialog::OnStnClickedWatch)
-
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
@@ -54,8 +53,10 @@ END_MESSAGE_MAP()
 CPoint CWatchDialog::UserPoint2RemoteScreenPoint(CPoint& point,bool isScreen)
 {
 	CRect clientRect;
-	if(!isScreen) ClientToScreen(&point);//转换为相对屏幕左上角的坐标（屏幕内的绝对坐标）
-	m_picture.ScreenToClient(&point); //全局坐标到客户区域坐标
+	//ClientToScreen = "从客户区坐标系转换到屏幕坐标系"
+	//ScreenToClient = "从屏幕坐标系转换到客户区坐标系"
+	if(!isScreen) ClientToScreen(&point);//转换为屏幕内的绝对坐标
+	m_picture.ScreenToClient(&point); //全局坐标到客户区域坐标 也就是是picture框内的坐标
 	TRACE("x=%d y=%d\r\n", point.x, point.y);
 	//本地坐标，到远程坐标
 	m_picture.GetWindowRect(clientRect);
@@ -79,28 +80,14 @@ BOOL CWatchDialog::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-//定时器用于更新
+//定时器用于更新，但是目前啥也没做
 void CWatchDialog::OnTimer(UINT_PTR nIDEvent)
 {
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	//if (nIDEvent == 0) {
-	//	CClientController* pParent = (CClientController*)GetParent();
-	//	if (m_isFull) {
-	//		CRect rect;
-	//		m_picture.GetWindowRect(rect);
-	//		m_nObjWidth = m_image.GetWidth();
-	//		m_nObjHeight = m_image.GetHeight();
-	//		m_image.StretchBlt(
-	//			m_picture.GetDC()->GetSafeHdc(), 0, 0, rect.Width(), rect.Height(), SRCCOPY);//用来缩放
-	//		m_picture.InvalidateRect(NULL);
-	//		TRACE("更新图片完成%d %d %08X\r\n", m_nObjWidth, m_nObjHeight, (HBITMAP)m_image);
-	//		m_image.Destroy();
-	//		m_isFull = false;
-	//	}
-	//}
+	
 	CDialogEx::OnTimer(nIDEvent);
 }
 
+//解析包获得信息
 LRESULT CWatchDialog::OnSendPackAck(WPARAM wParam, LPARAM lParam)
 {
 	if (lParam == -1 || ( lParam == -2)) {

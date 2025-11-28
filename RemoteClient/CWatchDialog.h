@@ -18,8 +18,8 @@ public:
 	virtual ~CWatchDialog();
 
 // 对话框数据
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_DLG_WATCH };
+#ifdef AFX_DESIGN_TIME//当在Visual Studio中打开.rc资源文件并使用对话框设计器进行可视化编辑时，这个宏才会被激活
+	enum { IDD = IDD_DLG_WATCH };//IDD = IDD_DLG_WATCH 表示将这个对话框类与资源文件中ID为 IDD_DLG_WATCH 的对话框资源关联起来
 #endif
 
 public:

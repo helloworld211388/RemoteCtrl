@@ -6,7 +6,7 @@
 
 class CStatusDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CStatusDlg)
+	DECLARE_DYNAMIC(CStatusDlg)// 允许运行时识别这是 CStatusDlg 对话框
 
 public:
 	CStatusDlg(CWnd* pParent = nullptr);   // 标准构造函数
@@ -20,7 +20,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
-	DECLARE_MESSAGE_MAP()
+	DECLARE_MESSAGE_MAP()// 为消息处理做准备
 public:
 	CEdit m_info;
 };
